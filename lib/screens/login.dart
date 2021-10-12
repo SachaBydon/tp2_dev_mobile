@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+import 'package:tp2_dev_mobile/models/auth.dart';
+import 'package:tp2_dev_mobile/screens/home.dart';
 
 class Login extends StatefulWidget {
   //Function to be called when the user is logged in
-  final Function login;
+  // final Function login;
 
-  const Login({Key? key, required this.login}) : super(key: key);
+  const Login({
+    Key? key,
+    /*required this.login*/
+  }) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -22,15 +29,17 @@ class _LoginState extends State<Login> {
   var authHandler = Auth();
 
   /// Method to check if the form is valid and if it is log the user in
-  submitForm() async {
+  submitForm(AuthModel authContext) async {
     if (_formKey.currentState!.validate()) {
       checkAuth(
-          _loginValue, _passwordValue, context, widget.login, authHandler);
+          _loginValue, _passwordValue, context, authContext.login, authHandler);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var authContext = context.watch<AuthModel>();
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Connexion'),
@@ -74,7 +83,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: submitForm,
+                      onPressed: () => submitForm(authContext),
                       child: const Text('Se connecter',
                           style: TextStyle(fontSize: 20)),
                       style: ElevatedButton.styleFrom(
@@ -95,6 +104,11 @@ class _LoginState extends State<Login> {
       );
       //Call the login function
       login(user);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+        (Route<dynamic> route) => false,
+      );
     }).catchError((e) {
       //Authentication failed
       ScaffoldMessenger.of(context).showSnackBar(

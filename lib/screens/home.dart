@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './buy.dart';
-import './basket.dart';
+
+import 'package:tp2_dev_mobile/screens/buy.dart';
+import 'package:tp2_dev_mobile/screens/basket.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -40,17 +41,17 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: getPage(),
+      body: getPage(context),
     );
   }
 
-  getPage() {
+  getPage(context) {
     if (page == 0) {
       // page Acheter
-      return buy();
+      return const Buy();
     } else if (page == 1) {
       // page Panier
-      return basket();
+      return const Basket();
     } else if (page == 2) {
       // page Profil
       return const Center(child: Text('TODO: Profil'));

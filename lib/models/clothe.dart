@@ -1,11 +1,11 @@
-//Clothe class to store clothes data from firebase
 class Clothe {
+  String id;
   String title;
   double price;
   String image;
   String size;
   String brand;
-  Clothe(this.title, this.price, this.image, this.size, this.brand);
+  Clothe(this.id, this.title, this.price, this.image, this.size, this.brand);
 
   @override
   String toString() {

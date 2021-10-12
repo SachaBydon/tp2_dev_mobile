@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tp2_dev_mobile/models.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:tp2_dev_mobile/models/clothe.dart';
+import 'package:tp2_dev_mobile/models/auth.dart';
 
 class Detail extends StatefulWidget {
   final Clothe clothe;
@@ -13,6 +17,8 @@ class Detail extends StatefulWidget {
 class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
+    var authContext = context.watch<AuthModel>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.clothe.title),
@@ -48,15 +54,29 @@ class _DetailState extends State<Detail> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  print('buy !');
-                },
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () => buy(authContext, widget.clothe),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void buy(AuthModel authContext, Clothe clothe) async {
+    print('buy ${clothe.id}');
+
+    var userUID = authContext.user?.uid ?? '';
+
+    print('res: ' + userUID);
+
+    await FirebaseFirestore.instance.collection('paniers').doc(userUID).update({
+      'items': FieldValue.arrayUnion([clothe.id])
+    }).then((_) {
+      print('res: item updated');
+    }).catchError((error) {
+      print('res: error: $error');
+    });
   }
 }
