@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tp2_dev_mobile/screens/buy.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
+import 'package:tp2_dev_mobile/screens/profil.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class _HomeState extends State<Home> {
       return const Basket();
     } else if (page == 2) {
       // page Profil
-      return const Center(child: Text('TODO: Profil'));
+      return const Profil();
     }
   }
 }
