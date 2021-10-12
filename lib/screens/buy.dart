@@ -41,7 +41,7 @@ class Buy extends StatelessWidget {
                                       child: Center(
                                           child: ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.circular(100),
+                                                  BorderRadius.circular(10),
                                               child: Image.network(
                                                 snapshot.data![i].image,
                                                 height: 50,

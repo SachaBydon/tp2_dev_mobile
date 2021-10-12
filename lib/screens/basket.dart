@@ -17,63 +17,78 @@ class _BasketState extends State<Basket> {
   Widget build(BuildContext context) {
     var authContext = context.watch<AuthModel>();
 
+    var totalHeight = 50;
+    var listHeight = MediaQuery.of(context).size.height - 56 - 80 - totalHeight;
+
     return FutureBuilder(
         future: getBasketItems(authContext),
         builder: (context, AsyncSnapshot<List<Clothe>> snapshot) {
           if (snapshot.hasData) {
             return Wrap(children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  padding: const EdgeInsets.all(16),
-                  itemBuilder: (BuildContext context, int i) {
-                    var clothe = snapshot.data![i];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                    margin: const EdgeInsets.only(right: 10),
-                                    child: Center(
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.network(
-                                              snapshot.data![i].image,
-                                              height: 50,
-                                              width: 50,
-                                              fit: BoxFit.cover,
-                                            )))),
-                                SizedBox(
-                                    height: 50,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(snapshot.data![i].title,
-                                            style:
-                                                const TextStyle(fontSize: 20)),
-                                        Text(
-                                            'Taille: ${snapshot.data![i].size}'),
-                                      ],
-                                    )),
-                              ],
-                            ),
-                            Text('${snapshot.data![i].price}€',
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => delete(authContext, clothe))
-                          ]),
-                    );
-                  }),
+              Container(
+                constraints: BoxConstraints(maxHeight: listHeight),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    padding: const EdgeInsets.all(16),
+                    itemBuilder: (BuildContext context, int i) {
+                      var clothe = snapshot.data![i];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      child: Center(
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                snapshot.data![i].image,
+                                                height: 50,
+                                                width: 50,
+                                                fit: BoxFit.cover,
+                                              )))),
+                                  SizedBox(
+                                      height: totalHeight.toDouble(),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(snapshot.data![i].title,
+                                              style: const TextStyle(
+                                                  fontSize: 20)),
+                                          Text(
+                                              'Taille: ${snapshot.data![i].size}'),
+                                        ],
+                                      )),
+                                ],
+                              ),
+                              Container(
+                                  height: 50,
+                                  child: Row(
+                                    children: [
+                                      Text('${snapshot.data![i].price}€',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold)),
+                                      IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            delete(authContext, clothe);
+                                          })
+                                    ],
+                                  ))
+                            ]),
+                      );
+                    }),
+              ),
               Container(
                 padding: const EdgeInsets.all(16),
                 alignment: Alignment.centerRight,
