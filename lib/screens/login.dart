@@ -30,6 +30,7 @@ class _LoginState extends State<Login> {
 
   /// Method to check if the form is valid and if it is log the user in
   submitForm(AuthModel authContext) async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       checkAuth(
           _loginValue, _passwordValue, context, authContext.login, authHandler);
@@ -64,7 +65,7 @@ class _LoginState extends State<Login> {
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Login',
+                        labelText: 'Email',
                       ),
                     ),
                     TextFormField(
@@ -99,16 +100,12 @@ class _LoginState extends State<Login> {
       loginValue, passwordValue, context, login, authHandler) async {
     authHandler.handleSignInEmail(loginValue, passwordValue).then((user) {
       //Authentication successful
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Authentification réussi !')),
-      );
-      //Call the login function
       login(user);
       Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {
       //Authentication failed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(content: Text(e.toString().split('] ')[1])),
       );
     });
   }
@@ -121,14 +118,6 @@ class Auth {
   Future<User> handleSignInEmail(String email, String password) async {
     UserCredential result =
         await auth.signInWithEmailAndPassword(email: email, password: password);
-    final User user = result.user!;
-
-    return user;
-  }
-
-  Future<User> handleSignUp(email, password) async {
-    UserCredential result = await auth.createUserWithEmailAndPassword(
-        email: email, password: password);
     final User user = result.user!;
 
     return user;

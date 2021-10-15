@@ -21,7 +21,7 @@ class _ProfilState extends State<Profil> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Profil'),
+          title: const Text('Profil'),
         ),
         body: FutureBuilder(
           future: getDefaultData(authContext),

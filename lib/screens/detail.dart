@@ -20,48 +20,47 @@ class _DetailState extends State<Detail> {
     var authContext = context.watch<AuthModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.clothe.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300,
-              child: Image.network(widget.clothe.image),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.clothe.size,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '${widget.clothe.price}€',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '${widget.clothe.brand}',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () => buy(authContext, widget.clothe),
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(widget.clothe.title),
         ),
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => buy(authContext, widget.clothe),
+          child: Icon(Icons.shopping_cart),
+        ),
+        body: SingleChildScrollView(
+          child: Expanded(
+            // width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  // height: 300,
+                  child: Image.network(widget.clothe.image),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Taille: ${widget.clothe.size}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${widget.clothe.price}€',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Marque: ${widget.clothe.brand}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   void buy(AuthModel authContext, Clothe clothe) async {
@@ -74,9 +73,13 @@ class _DetailState extends State<Detail> {
     await FirebaseFirestore.instance.collection('paniers').doc(userUID).update({
       'items': FieldValue.arrayUnion([clothe.id])
     }).then((_) {
-      print('res: item updated');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${clothe.title} ajouté au panier')),
+      );
     }).catchError((error) {
-      print('res: error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
     });
   }
 }

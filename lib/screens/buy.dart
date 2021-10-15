@@ -49,7 +49,7 @@ class Buy extends StatelessWidget {
                 length: 3,
                 child: ListView.builder(
                     itemCount: snapshot.data!.length,
-                    padding: const EdgeInsets.all(16),
+                    // padding: const EdgeInsets.all(16),
                     itemBuilder: (BuildContext context, int i) {
                       return InkWell(
                           onTap: () {
@@ -63,8 +63,8 @@ class Buy extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 13, bottom: 13),
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
