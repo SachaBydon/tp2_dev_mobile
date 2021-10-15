@@ -104,11 +104,7 @@ class _LoginState extends State<Login> {
       );
       //Call the login function
       login(user);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-        (Route<dynamic> route) => false,
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {
       //Authentication failed
       ScaffoldMessenger.of(context).showSnackBar(

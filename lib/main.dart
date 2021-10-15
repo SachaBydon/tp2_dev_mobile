@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
         Provider(create: (context) => AuthModel()),
       ],
       child: MaterialApp(
-        title: 'Provider Demo',
+        title: 'Vinted',
         initialRoute: '/login',
         routes: {
           '/login': (context) => const Login(),

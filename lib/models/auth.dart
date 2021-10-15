@@ -10,4 +10,10 @@ class AuthModel {
     print('UUID: ${user?.uid}');
     print('logged in !');
   }
+
+  void logout() {
+    loggedIn = false;
+    user = null;
+    print('logged out !');
+  }
 }
