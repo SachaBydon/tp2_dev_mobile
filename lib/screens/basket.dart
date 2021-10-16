@@ -27,82 +27,93 @@ class _BasketState extends State<Basket> {
         body: FutureBuilder(
             future: getBasketItems(authContext),
             builder: (context, AsyncSnapshot<List<Clothe>> snapshot) {
-              if (snapshot.hasData) {
-                return Wrap(children: [
-                  Container(
-                    constraints: BoxConstraints(maxHeight: listHeight),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        padding: const EdgeInsets.all(16),
-                        itemBuilder: (BuildContext context, int i) {
-                          var clothe = snapshot.data![i];
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 10),
-                                          child: Center(
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    snapshot.data![i].image,
-                                                    height: 50,
-                                                    width: 50,
-                                                    fit: BoxFit.cover,
-                                                  )))),
-                                      SizedBox(
-                                          height: totalHeight.toDouble(),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(snapshot.data![i].title,
-                                                  style: const TextStyle(
-                                                      fontSize: 20)),
-                                              Text(
-                                                  'Taille: ${snapshot.data![i].size}'),
-                                            ],
-                                          )),
-                                    ],
-                                  ),
-                                  Container(
-                                      height: 50,
-                                      child: Row(
-                                        children: [
-                                          Text('${snapshot.data![i].price}€',
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold)),
-                                          IconButton(
-                                              icon: Icon(Icons.delete),
-                                              onPressed: () {
-                                                delete(authContext, clothe);
-                                              })
-                                        ],
-                                      ))
-                                ]),
-                          );
-                        }),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    alignment: Alignment.centerRight,
-                    child: Text('Total: ${getTotalPrice(snapshot.data!)}€',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                  )
-                ]);
+              print(snapshot.connectionState);
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return Wrap(children: [
+                    Container(
+                      constraints: BoxConstraints(maxHeight: listHeight),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          padding: const EdgeInsets.all(16),
+                          itemBuilder: (BuildContext context, int i) {
+                            var clothe = snapshot.data![i];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 10),
+                                            child: Center(
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image.network(
+                                                      snapshot.data![i].image,
+                                                      height: 50,
+                                                      width: 50,
+                                                      fit: BoxFit.cover,
+                                                    )))),
+                                        SizedBox(
+                                            height: totalHeight.toDouble(),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(snapshot.data![i].title,
+                                                    style: const TextStyle(
+                                                        fontSize: 20)),
+                                                Text(
+                                                    'Taille: ${snapshot.data![i].size}'),
+                                              ],
+                                            )),
+                                      ],
+                                    ),
+                                    Container(
+                                        height: 50,
+                                        child: Row(
+                                          children: [
+                                            Text('${snapshot.data![i].price}€',
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            IconButton(
+                                                icon: Icon(Icons.delete),
+                                                onPressed: () {
+                                                  delete(authContext, clothe);
+                                                })
+                                          ],
+                                        ))
+                                  ]),
+                            );
+                          }),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      alignment: Alignment.centerRight,
+                      child: Text('Total: ${getTotalPrice(snapshot.data!)}€',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                    )
+                  ]);
+                } else {
+                  return const Center(
+                      child: Text(
+                          'Vous n\'avez pas d\'articles dans votre panier'));
+                }
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),

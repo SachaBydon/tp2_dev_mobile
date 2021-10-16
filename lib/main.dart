@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
         Provider(create: (context) => AuthModel()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Vinted',
         initialRoute: '/login',
         routes: {
