@@ -33,6 +33,12 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Vinted',
         initialRoute: '/login',
+        theme: ThemeData(
+          colorScheme: const ColorScheme.light(
+            primary: Color(0xff26AE60),
+            secondary: Color(0xff26AE60),
+          ),
+        ),
         routes: {
           // '/login': (context) => const Login(),
           '/login': (context) => const NewHome(),
