@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/login.dart';
 import 'package:tp2_dev_mobile/screens/new_home.dart';
+import 'package:tp2_dev_mobile/screens/new_login.dart';
 import 'package:tp2_dev_mobile/screens/home.dart';
 
 void main() async {
@@ -41,8 +42,9 @@ class _MyAppState extends State<MyApp> {
         ),
         routes: {
           // '/login': (context) => const Login(),
-          '/login': (context) => const NewHome(),
-          '/home': (context) => const Home(),
+          '/login': (context) => const NewLogin(),
+          '/home': (context) => const NewHome(),
+          // '/home': (context) => const Home(),
         },
       ),
     );
