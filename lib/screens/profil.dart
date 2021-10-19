@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profil extends StatefulWidget {
@@ -147,9 +145,7 @@ class _ProfilState extends State<Profil> {
   submit(AuthModel authContext, UserData user_data) async {
     FocusScope.of(context).unfocus();
 
-    //TODO remmetre
-    String userUID = 'Zhe8lmYksVVo3DU8XiBb8cxcwAN2';
-    // var userUID = authContext.user?.uid ?? '';
+    String userUID = authContext.user?.uid ?? '';
 
     await FirebaseFirestore.instance.collection('users').doc(userUID).update({
       'address': user_data.address,
@@ -164,13 +160,8 @@ class _ProfilState extends State<Profil> {
   }
 
   Future<UserData> getDefaultData(AuthModel authContext) async {
-    // var userUID = authContext.user?.uid ?? '';
-    // var userEmail = authContext.user?.email ?? '';
-
-    //TODO remmetre
-    String userUID = 'Zhe8lmYksVVo3DU8XiBb8cxcwAN2';
-    String userEmail = 'sacha.bydon@etu.unice.fr';
-
+    var userUID = authContext.user?.uid ?? '';
+    var userEmail = authContext.user?.email ?? '';
     var userFakePassword = '............';
 
     DocumentSnapshot<Map<String, dynamic>> query =

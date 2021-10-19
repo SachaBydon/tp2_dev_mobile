@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-
 import 'package:tp2_dev_mobile/models/auth.dart';
-import 'package:tp2_dev_mobile/screens/home.dart';
 
 class Login extends StatefulWidget {
   //Function to be called when the user is logged in
@@ -42,58 +40,109 @@ class _LoginState extends State<Login> {
     var authContext = context.watch<AuthModel>();
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Connexion'),
-        ),
-        body: Container(
-            padding: const EdgeInsets.all(16),
-            height: MediaQuery.of(context).size.height,
-            child: Form(
-              key: _formKey,
-              child: Wrap(
-                  runSpacing: 16,
-                  runAlignment: WrapAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      validator: (value) {
-                        if (value == '') {
-                          return 'Entrez une adresse mail valide';
-                        } else {
-                          _loginValue = value.toString();
-                          return null;
-                        }
-                      },
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                      ),
+        backgroundColor: Colors.grey[300],
+        body: SizedBox(
+            height: double.infinity,
+            child: Wrap(runAlignment: WrapAlignment.end, children: [
+              Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(40),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == '') {
-                          return 'Entrez votre mot de passe';
-                        } else {
-                          _passwordValue = value.toString();
-                          return null;
-                        }
-                      },
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Connexion',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20),
+                      Form(
+                        key: _formKey,
+                        child: Wrap(
+                            runSpacing: 16,
+                            runAlignment: WrapAlignment.center,
+                            children: <Widget>[
+                              TextFormField(
+                                validator: (value) {
+                                  if (value == '') {
+                                    return 'Entrez une adresse mail valide';
+                                  } else {
+                                    _loginValue = value.toString();
+                                    return null;
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  labelText: 'Email',
+                                ),
+                              ),
+                              TextFormField(
+                                validator: (value) {
+                                  if (value == '') {
+                                    return 'Entrez votre mot de passe';
+                                  } else {
+                                    _passwordValue = value.toString();
+                                    return null;
+                                  }
+                                },
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  labelText: 'Mot de passe',
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => submitForm(authContext),
+                                child: const Text('Se connecter',
+                                    style: TextStyle(fontSize: 16)),
+                                style: ElevatedButton.styleFrom(
+                                  shadowColor: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                      bottom: 18, top: 18),
+                                  minimumSize: const Size(double.infinity, 30),
+                                ),
+                              ),
+                            ]),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => submitForm(authContext),
-                      child: const Text('Se connecter',
-                          style: TextStyle(fontSize: 20)),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(16),
-                        minimumSize: const Size(double.infinity, 30),
+                      SizedBox(height: 15),
+                      InkWell(
+                        onTap: () => {print('mdp oublié')},
+                        child: Text(
+                          'Mot de passe oublié ?',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ]),
-            )));
+                      SizedBox(height: 50),
+                      Center(
+                          child: InkWell(
+                        onTap: () => {print('créer un compte')},
+                        child: Column(
+                          children: [
+                            Text('Vous n\'avez pas de compte ?',
+                                style: TextStyle(color: Colors.grey[600])),
+                            Text('Créer un compte',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ))
+                    ],
+                  ))
+            ])));
   }
 
   Future<void> checkAuth(

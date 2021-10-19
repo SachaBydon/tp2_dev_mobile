@@ -126,11 +126,7 @@ class _BasketState extends State<Basket> {
   //Get clothes data from firebase
   Future<List<Clothe>> getBasketItems(AuthModel authContext) async {
     // get the user id from the global state
-    // var userUID = authContext.user?.uid ?? 'Zhe8lmYksVVo3DU8XiBb8cxcwAN2';
-
-    //TODO remmetre l'uid dynamique
-    // var userUID = authContext.user?.uid ?? '';
-    String userUID = 'Zhe8lmYksVVo3DU8XiBb8cxcwAN2';
+    var userUID = authContext.user?.uid ?? '';
 
     //get items refs of the basket
     DocumentSnapshot<Map<String, dynamic>> basketQuery = await FirebaseFirestore
