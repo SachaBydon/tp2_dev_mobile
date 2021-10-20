@@ -22,7 +22,7 @@ class _ProfilState extends State<Profil> {
         backgroundColor: Colors.white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[TopBar('Profile'), form(authContext)],
+          children: <Widget>[const TopBar('Profile'), form(authContext)],
         ));
   }
 
@@ -30,20 +30,21 @@ class _ProfilState extends State<Profil> {
     return FutureBuilder(
       future: getDefaultData(authContext),
       builder: (context, AsyncSnapshot<UserData> snapshot) {
-        UserData? user_data = snapshot.data;
-        if (snapshot.hasData && user_data != null) {
+        UserData? userData = snapshot.data;
+        if (snapshot.hasData && userData != null) {
           return Container(
               padding: const EdgeInsets.all(20),
               child: Wrap(runSpacing: 10, children: [
                 TextFormField(
-                    initialValue: user_data.email,
+                    initialValue: userData.email,
+                    keyboardType: TextInputType.emailAddress,
                     enabled: false,
                     decoration: const InputDecoration(
                       labelText: 'email',
                       isDense: true,
                     )),
                 TextFormField(
-                  initialValue: user_data.password,
+                  initialValue: userData.password,
                   obscureText: true,
                   enabled: false,
                   decoration: const InputDecoration(
@@ -51,45 +52,45 @@ class _ProfilState extends State<Profil> {
                     isDense: true,
                   ),
                   onChanged: (value) {
-                    user_data.password = value.toString();
+                    userData.password = value.toString();
                   },
                 ),
                 InputDatePickerFormField(
-                  initialDate: DateTime.parse(user_data.birth),
+                  initialDate: DateTime.parse(userData.birth),
                   firstDate: DateTime(1970),
                   lastDate: DateTime.now(),
                   onDateSaved: (date) {
-                    user_data.birth = date.toString();
+                    userData.birth = date.toString();
                   },
                 ),
                 TextFormField(
-                  initialValue: user_data.address,
+                  initialValue: userData.address,
                   decoration: const InputDecoration(
                     labelText: 'address',
                     isDense: true,
                   ),
                   onChanged: (value) {
-                    user_data.address = value.toString();
+                    userData.address = value.toString();
                   },
                 ),
                 TextFormField(
-                  initialValue: user_data.postcode,
+                  initialValue: userData.postcode,
                   decoration: const InputDecoration(
                     labelText: 'postcode',
                     isDense: true,
                   ),
                   onChanged: (value) {
-                    user_data.postcode = value.toString();
+                    userData.postcode = value.toString();
                   },
                 ),
                 TextFormField(
-                  initialValue: user_data.city,
+                  initialValue: userData.city,
                   decoration: const InputDecoration(
                     labelText: 'city',
                     isDense: true,
                   ),
                   onChanged: (value) {
-                    user_data.city = value.toString();
+                    userData.city = value.toString();
                   },
                 ),
                 Wrap(
@@ -98,7 +99,7 @@ class _ProfilState extends State<Profil> {
                   direction: Axis.horizontal,
                   children: [
                     ElevatedButton(
-                      onPressed: () => submit(authContext, user_data),
+                      onPressed: () => submit(authContext, userData),
                       child: const Text('Valider'),
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.transparent,
@@ -142,16 +143,16 @@ class _ProfilState extends State<Profil> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
-  submit(AuthModel authContext, UserData user_data) async {
+  submit(AuthModel authContext, UserData userData) async {
     FocusScope.of(context).unfocus();
 
     String userUID = authContext.user?.uid ?? '';
 
     await FirebaseFirestore.instance.collection('users').doc(userUID).update({
-      'address': user_data.address,
-      'birth': user_data.birth,
-      'city': user_data.city,
-      'postcode': user_data.postcode,
+      'address': userData.address,
+      'birth': userData.birth,
+      'city': userData.city,
+      'postcode': userData.postcode,
     }).then((_) {
       print('res: profile updated');
     }).catchError((error) {

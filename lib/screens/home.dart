@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
 import 'package:tp2_dev_mobile/screens/profil.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
@@ -30,7 +29,11 @@ class _HomeState extends State<Home> {
         body: DefaultTabController(
           length: tabs.length,
           child: Column(
-            children: <Widget>[const TopBar(), ArticlesTabs(tabs), ListItems()],
+            children: <Widget>[
+              const TopBar(),
+              ArticlesTabs(tabs),
+              const ListItems()
+            ],
           ),
         ));
   }
@@ -41,62 +44,79 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authContext = context.watch<AuthModel>();
+    return Container(
+      padding: const EdgeInsets.only(top: 40, bottom: 20, left: 15, right: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Profil(),
+                ),
+              )
+            },
+            child: const Padding(
+                padding: EdgeInsets.all(5),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage('images/profile.png'),
+                )),
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+          const BasketButton(),
+        ],
+      ),
+    );
+  }
+}
+
+class BasketButton extends StatelessWidget {
+  const BasketButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    AuthModel authContext = context.watch<AuthModel>();
 
     return FutureBuilder(
       future: getCartCount(authContext),
       builder: (context, AsyncSnapshot<int> snapshot) {
         int cartCount = snapshot.data ?? 0;
-        return Container(
-          padding:
-              const EdgeInsets.only(top: 40, bottom: 20, left: 15, right: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profil(),
-                    ),
-                  )
-                },
-                child: const Padding(
-                    padding: EdgeInsets.all(5),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage('images/profile.png'),
-                    )),
-                customBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
+        return IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Basket(),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Basket(),
-                      ),
-                    );
-                  },
-                  splashRadius: 25,
-                  icon: cartCount > 0
-                      ? Badge(
-                          badgeColor: Theme.of(context).colorScheme.primary,
-                          elevation: 0,
-                          badgeContent: Text(cartCount.toString(),
-                              style: TextStyle(color: Colors.white)),
-                          child: const Icon(
-                            Icons.shopping_cart,
+              );
+            },
+            splashRadius: 25,
+            icon: cartCount > 0
+                ? Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(Icons.shopping_cart),
+                      Positioned(
+                          top: -10,
+                          right: -10,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(cartCount.toString(),
+                                style: const TextStyle(color: Colors.white)),
+                            padding: const EdgeInsets.only(
+                                top: 2, right: 6, left: 6, bottom: 2),
                           ))
-                      : const Icon(
-                          Icons.shopping_cart,
-                        )),
-            ],
-          ),
-        );
+                    ],
+                  )
+                : const Icon(Icons.shopping_cart));
       },
     );
   }
@@ -115,9 +135,9 @@ class TopBar extends StatelessWidget {
 }
 
 class ArticlesTabs extends StatefulWidget {
-  List tabs;
+  final List tabs;
 
-  ArticlesTabs(this.tabs, {Key? key}) : super(key: key);
+  const ArticlesTabs(this.tabs, {Key? key}) : super(key: key);
 
   @override
   _ArticlesTabsState createState() => _ArticlesTabsState();
@@ -174,7 +194,7 @@ class _ArticlesTabsState extends State<ArticlesTabs> {
 }
 
 class ListItems extends StatefulWidget {
-  ListItems({Key? key}) : super(key: key);
+  const ListItems({Key? key}) : super(key: key);
 
   @override
   _ListItemsState createState() => _ListItemsState();
@@ -311,7 +331,7 @@ class _ListItemsState extends State<ListItems> {
   }
 
   Future<List<Clothe>> getAllItems(category) async {
-    QuerySnapshot? querySnapshot = null;
+    QuerySnapshot? querySnapshot;
     var clothesCollection = FirebaseFirestore.instance.collection('clothes');
     if (category == 0) {
       querySnapshot = await clothesCollection.get();

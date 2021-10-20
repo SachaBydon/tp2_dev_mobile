@@ -21,7 +21,7 @@ class _BasketState extends State<Basket> {
         backgroundColor: Colors.white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[TopBar('Panier'), renderedList(authContext)],
+          children: <Widget>[const TopBar('Panier'), renderedList(authContext)],
         ));
   }
 
@@ -82,7 +82,7 @@ class _BasketState extends State<Basket> {
                                         )),
                                   ],
                                 ),
-                                Container(
+                                SizedBox(
                                     height: 50,
                                     child: Row(
                                       children: [
@@ -181,29 +181,30 @@ class _BasketState extends State<Basket> {
 }
 
 class TopBar extends StatelessWidget {
-  String title;
-  TopBar(this.title, {Key? key}) : super(key: key);
+  final String title;
+  const TopBar(this.title, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 50,
-        margin: const EdgeInsets.only(top: 43, left: 16),
+        margin: const EdgeInsets.only(top: 43),
         child: Stack(
           children: [
-            IconButton(
-              splashRadius: 25,
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+            Container(
+              margin: const EdgeInsets.only(left: 16),
+              child: IconButton(
+                splashRadius: 25,
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
-            Positioned(
-              child: Center(
-                  child: Text(title,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold))),
-            )
+            Center(
+                child: Text(title,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold))),
           ],
         ));
   }

@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
             child: Wrap(runAlignment: WrapAlignment.end, children: [
               Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(40),
+                  padding: const EdgeInsets.all(40),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -68,6 +68,7 @@ class _LoginState extends State<Login> {
                             runAlignment: WrapAlignment.center,
                             children: <Widget>[
                               TextFormField(
+                                keyboardType: TextInputType.emailAddress,
                                 validator: (value) {
                                   if (value == '') {
                                     return 'Entrez une adresse mail valide';
@@ -83,6 +84,7 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
+                                keyboardType: TextInputType.visiblePassword,
                                 validator: (value) {
                                   if (value == '') {
                                     return 'Entrez votre mot de passe';
@@ -114,7 +116,7 @@ class _LoginState extends State<Login> {
                               ),
                             ]),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       InkWell(
                         onTap: () => {print('mdp oublié')},
                         child: Text(
@@ -124,7 +126,7 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       Center(
                           child: InkWell(
                         onTap: () => {print('créer un compte')},

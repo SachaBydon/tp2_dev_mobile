@@ -23,54 +23,53 @@ class _DetailState extends State<Detail> {
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
           onPressed: () => buy(authContext, widget.clothe),
-          child: Icon(Icons.shopping_cart, color: Colors.white),
+          child: const Icon(Icons.shopping_cart, color: Colors.white),
           elevation: 0,
         ),
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TopBar(''),
+            const TopBar(''),
             SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    child: Image.network(widget.clothe.image),
-                  ),
+                  Image.network(widget.clothe.image),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.clothe.title,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Taille: ${widget.clothe.size}',
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '${widget.clothe.price}€',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Marque: ${widget.clothe.brand}',
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-        ));
+        )));
   }
 
   void buy(AuthModel authContext, Clothe clothe) async {
