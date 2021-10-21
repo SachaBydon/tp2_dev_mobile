@@ -193,9 +193,9 @@ class TopBar extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(left: 16),
-              child: IconButton(
-                splashRadius: 25,
-                icon: const Icon(Icons.arrow_back),
+              child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                child: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
                 },

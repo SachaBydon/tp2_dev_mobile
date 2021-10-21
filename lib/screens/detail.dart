@@ -19,57 +19,124 @@ class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
     var authContext = context.watch<AuthModel>();
+    double imageSize = 400.0;
+
     return Scaffold(
-        backgroundColor: Colors.white,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => buy(authContext, widget.clothe),
-          child: const Icon(Icons.shopping_cart, color: Colors.white),
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const TopBar(''),
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Image.network(widget.clothe.image),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.clothe.title,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
+        body: Column(
+      children: [
+        Stack(
+          children: [
+            SizedBox(
+                height: imageSize,
+                width: double.infinity,
+                child: Image.network(widget.clothe.image, fit: BoxFit.cover)),
+            Container(
+                margin: EdgeInsets.only(top: imageSize - 30),
+                height: MediaQuery.of(context).size.height - imageSize + 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Taille: ${widget.clothe.size}',
-                      style: const TextStyle(fontSize: 20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(50),
+                      blurRadius: 15,
                     ),
+                  ],
+                ),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(
+                      top: 20, left: 30, right: 30, bottom: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 70,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(
+                            top: 8, bottom: 8, left: 20, right: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(50),
+                        ),
+                        child: Text(
+                          '${widget.clothe.price} €',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                      Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          child: Text(widget.clothe.title,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ))),
+                      Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          'Taille: ${widget.clothe.size}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Text(
+                        'Marque: ${widget.clothe.brand}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Expanded(child: Container()),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              minimumSize: const Size(double.infinity, 50)),
+                          onPressed: () => buy(authContext, widget.clothe),
+                          child: Wrap(
+                            runAlignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 10,
+                            children: const [
+                              Icon(Icons.add_shopping_cart),
+                              Text(
+                                'Ajouter au panier',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ))
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '${widget.clothe.price}€',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Marque: ${widget.clothe.brand}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
+                )),
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: TopBar(''),
             ),
           ],
-        )));
+        )
+      ],
+    ));
   }
 
   void buy(AuthModel authContext, Clothe clothe) async {
