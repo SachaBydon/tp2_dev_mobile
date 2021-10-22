@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:tp2_dev_mobile/models/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   //Function to be called when the user is logged in
@@ -26,8 +27,10 @@ class _LoginState extends State<Login> {
   //Firebase authentication instance
   var authHandler = Auth();
 
+  var authContext;
+
   /// Method to check if the form is valid and if it is log the user in
-  submitForm(AuthModel authContext) async {
+  submitForm() async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       checkAuth(
@@ -37,8 +40,10 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var authContext = context.watch<AuthModel>();
-
+    if (authContext == null) {
+      authContext = context.watch<AuthModel>();
+      getAuthData(authContext.login);
+    }
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SizedBox(
@@ -101,7 +106,7 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: () => submitForm(authContext),
+                                onPressed: () => submitForm(),
                                 child: const Text('Se connecter',
                                     style: TextStyle(fontSize: 16)),
                                 style: ElevatedButton.styleFrom(
@@ -152,12 +157,44 @@ class _LoginState extends State<Login> {
     authHandler.handleSignInEmail(loginValue, passwordValue).then((user) {
       //Authentication successful
       login(user);
+      saveAuthData(loginValue, passwordValue);
       Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {
       //Authentication failed
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString().split('] ')[1])),
       );
+    });
+  }
+
+  saveAuthData(login, password) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('user_login', login);
+      prefs.setString('user_password', password);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getAuthData(login) async {
+    var userLogin;
+    var userPassword;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      userLogin = prefs.getString('user_login');
+      userPassword = prefs.getString('user_password');
+    } catch (e) {
+      print(e);
+    }
+
+    if (userLogin == null || userPassword == null) return null;
+
+    authHandler.handleSignInEmail(userLogin, userPassword).then((user) {
+      //Authentication successful
+      login(user);
+      Navigator.pushReplacementNamed(context, '/home');
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
@@ -137,9 +138,18 @@ class _ProfilState extends State<Profil> {
     );
   }
 
-  logOut(AuthModel authContext) {
+  logOut(AuthModel authContext) async {
     FirebaseAuth.instance.signOut();
     authContext.logout();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('user_login');
+      prefs.remove('user_password');
+    } catch (e) {
+      print(e);
+    }
+
     Navigator.pushReplacementNamed(context, '/login');
   }
 
