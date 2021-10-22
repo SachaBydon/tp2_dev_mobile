@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/home.dart';
@@ -22,27 +23,46 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Future<bool> aslogin() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var userLogin = prefs.getString('user_login');
+      return (userLogin != null);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider(create: (context) => AuthModel()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Vinted',
-        initialRoute: '/login',
-        theme: ThemeData(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xff26AE60),
-            secondary: Color(0xff26AE60),
-          ),
-        ),
-        routes: {
-          '/login': (context) => const Login(),
-          '/home': (context) => const Home(),
-        },
-      ),
-    );
+    return FutureBuilder(
+        future: aslogin(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return MultiProvider(
+              providers: [
+                Provider(create: (context) => AuthModel()),
+              ],
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Vinted',
+                initialRoute: (snapshot.data ?? false) ? '/home' : '/login',
+                theme: ThemeData(
+                  colorScheme: const ColorScheme.light(
+                    primary: Color(0xff26AE60),
+                    secondary: Color(0xff26AE60),
+                  ),
+                ),
+                routes: {
+                  '/login': (context) => const Login(),
+                  '/home': (context) => const Home(),
+                },
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
