@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
+import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/profil.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
+import 'package:tp2_dev_mobile/screens/login.dart';
 import 'package:tp2_dev_mobile/screens/detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tp2_dev_mobile/models/auth.dart';
-import 'package:provider/provider.dart';
+import 'package:tp2_dev_mobile/models/test_global.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,6 +25,16 @@ class _HomeState extends State<Home> {
     {'id': 2, 'label': 'Accessoires'}
   ];
 
+  var authHandler = Auth();
+  final userState = GetIt.instance.get<UserState>();
+  final counter = GetIt.instance.get<Counter>();
+
+  @override
+  void initState() {
+    super.initState();
+    getAuthData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +49,29 @@ class _HomeState extends State<Home> {
             ],
           ),
         ));
+  }
+
+  getAuthData() async {
+    String? userLogin;
+    String? userPassword;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      userLogin = prefs.getString('user_login');
+      userPassword = prefs.getString('user_password');
+    } catch (e) {
+      print(e);
+    }
+
+    if (userLogin == null || userPassword == null) return null;
+
+    authHandler.handleSignInEmail(userLogin, userPassword).then((user) {
+      //Authentication successful
+      userState.login(user);
+      userState.getCartCount().then((value) {
+        counter.setCounter(value);
+      });
+    });
   }
 }
 
@@ -68,7 +104,7 @@ class TopBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          const BasketButton(),
+          BasketButton(),
         ],
       ),
     );
@@ -76,61 +112,48 @@ class TopBar extends StatelessWidget {
 }
 
 class BasketButton extends StatelessWidget {
-  const BasketButton({Key? key}) : super(key: key);
+  BasketButton({Key? key}) : super(key: key);
+
+  final counter = GetIt.instance.get<Counter>();
 
   @override
   Widget build(BuildContext context) {
-    AuthModel authContext = context.watch<AuthModel>();
-
-    return FutureBuilder(
-      future: getCartCount(authContext),
-      builder: (context, AsyncSnapshot<int> snapshot) {
-        int cartCount = snapshot.data ?? 0;
-        return IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Basket(),
-                ),
-              );
-            },
-            splashRadius: 25,
-            icon: cartCount > 0
-                ? Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      const Icon(Icons.shopping_cart),
-                      Positioned(
-                          top: -10,
-                          right: -10,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Text(cartCount.toString(),
-                                style: const TextStyle(color: Colors.white)),
-                            padding: const EdgeInsets.only(
-                                top: 2, right: 6, left: 6, bottom: 2),
-                          ))
-                    ],
-                  )
-                : const Icon(Icons.shopping_cart));
-      },
-    );
-  }
-
-  Future<int> getCartCount(authContext) async {
-    //TODO update on change
-    String userUID = authContext.user?.uid ?? '';
-    DocumentSnapshot<Map<String, dynamic>> basketQuery = await FirebaseFirestore
-        .instance
-        .collection('paniers')
-        .doc(userUID)
-        .get();
-
-    return basketQuery['items'].length;
+    return StreamBuilder(
+        stream: counter.stream$,
+        builder: (context, AsyncSnapshot<int> snapshot) {
+          int cartCount = snapshot.data ?? 0;
+          return IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Basket(),
+                  ),
+                );
+              },
+              splashRadius: 25,
+              icon: cartCount > 0
+                  ? Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        const Icon(Icons.shopping_cart),
+                        Positioned(
+                            top: -10,
+                            right: -10,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(cartCount.toString(),
+                                  style: const TextStyle(color: Colors.white)),
+                              padding: const EdgeInsets.only(
+                                  top: 2, right: 6, left: 6, bottom: 2),
+                            ))
+                      ],
+                    )
+                  : const Icon(Icons.shopping_cart));
+        });
   }
 }
 

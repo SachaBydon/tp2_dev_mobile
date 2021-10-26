@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,27 +23,21 @@ class _LoginState extends State<Login> {
   final List<String?> textFieldsValue = [];
   String _loginValue = '';
   String _passwordValue = '';
+  bool showPassword = false;
 
   //Firebase authentication instance
   var authHandler = Auth();
-
-  var authContext;
 
   /// Method to check if the form is valid and if it is log the user in
   submitForm() async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
-      checkAuth(
-          _loginValue, _passwordValue, context, authContext.login, authHandler);
+      checkAuth(_loginValue, _passwordValue, context, authHandler);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (authContext == null) {
-      authContext = context.watch<AuthModel>();
-      getAuthData(authContext.login);
-    }
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SizedBox(
@@ -98,8 +92,17 @@ class _LoginState extends State<Login> {
                                     return null;
                                   }
                                 },
-                                obscureText: true,
+                                obscureText: !showPassword,
                                 decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                      icon: showPassword
+                                          ? const Icon(Icons.visibility_off)
+                                          : const Icon(Icons.visibility),
+                                      onPressed: () => {
+                                            setState(() {
+                                              showPassword = !showPassword;
+                                            })
+                                          }),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   labelText: 'Mot de passe',
@@ -153,10 +156,11 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> checkAuth(
-      loginValue, passwordValue, context, login, authHandler) async {
+      loginValue, passwordValue, context, authHandler) async {
     authHandler.handleSignInEmail(loginValue, passwordValue).then((user) {
       //Authentication successful
-      login(user);
+      var userState = GetIt.instance.get<UserState>();
+      userState.login(user);
       saveAuthData(loginValue, passwordValue);
       Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {
@@ -175,27 +179,6 @@ class _LoginState extends State<Login> {
     } catch (e) {
       print(e);
     }
-  }
-
-  getAuthData(login) async {
-    var userLogin;
-    var userPassword;
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      userLogin = prefs.getString('user_login');
-      userPassword = prefs.getString('user_password');
-    } catch (e) {
-      print(e);
-    }
-
-    if (userLogin == null || userPassword == null) return null;
-
-    authHandler.handleSignInEmail(userLogin, userPassword).then((user) {
-      //Authentication successful
-      login(user);
-      Navigator.pushReplacementNamed(context, '/home');
-    });
   }
 }
 

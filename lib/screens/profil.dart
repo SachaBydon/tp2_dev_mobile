@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_it/get_it.dart';
 
 class Profil extends StatefulWidget {
   const Profil({Key? key}) : super(key: key);
@@ -15,21 +15,21 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
+  final userState = GetIt.instance.get<UserState>();
+
   @override
   Widget build(BuildContext context) {
-    var authContext = context.watch<AuthModel>();
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[const TopBar('Profile'), form(authContext)],
+          children: <Widget>[const TopBar('Profile'), form()],
         ));
   }
 
-  Widget form(authContext) {
+  Widget form() {
     return FutureBuilder(
-      future: getDefaultData(authContext),
+      future: getDefaultData(),
       builder: (context, AsyncSnapshot<UserData> snapshot) {
         UserData? userData = snapshot.data;
         if (snapshot.hasData && userData != null) {
@@ -100,7 +100,7 @@ class _ProfilState extends State<Profil> {
                   direction: Axis.horizontal,
                   children: [
                     ElevatedButton(
-                      onPressed: () => submit(authContext, userData),
+                      onPressed: () => submit(userData),
                       child: const Text('Valider'),
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.transparent,
@@ -113,7 +113,7 @@ class _ProfilState extends State<Profil> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () => logOut(authContext),
+                      onPressed: () => logOut(),
                       child: const Text('Se déconnecter'),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red[500],
@@ -138,9 +138,9 @@ class _ProfilState extends State<Profil> {
     );
   }
 
-  logOut(AuthModel authContext) async {
+  logOut() async {
     FirebaseAuth.instance.signOut();
-    authContext.logout();
+    userState.logout();
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -153,10 +153,10 @@ class _ProfilState extends State<Profil> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
-  submit(AuthModel authContext, UserData userData) async {
+  submit(UserData userData) async {
     FocusScope.of(context).unfocus();
 
-    String userUID = authContext.user?.uid ?? '';
+    String userUID = userState.current?.uid ?? '';
 
     await FirebaseFirestore.instance.collection('users').doc(userUID).update({
       'address': userData.address,
@@ -170,9 +170,9 @@ class _ProfilState extends State<Profil> {
     });
   }
 
-  Future<UserData> getDefaultData(AuthModel authContext) async {
-    var userUID = authContext.user?.uid ?? '';
-    var userEmail = authContext.user?.email ?? '';
+  Future<UserData> getDefaultData() async {
+    var userUID = userState.current?.uid ?? '';
+    var userEmail = userState.current?.email ?? '';
     var userFakePassword = '............';
 
     DocumentSnapshot<Map<String, dynamic>> query =
