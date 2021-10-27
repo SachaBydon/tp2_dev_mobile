@@ -41,16 +41,14 @@ class _BasketState extends State<Basket> {
                                   width: 60,
                                   decoration: BoxDecoration(
                                       color: Colors.black.withOpacity(.2),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(25),
                                       ))),
-                              Container(
-                                child: const Center(
-                                    child: Text('Panier',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold))),
-                              ),
+                              const Center(
+                                  child: Text('Panier',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold))),
                               Expanded(
                                 child: ListView.builder(
                                     shrinkWrap: true,
@@ -123,7 +121,7 @@ class _BasketState extends State<Basket> {
                                                                   FontWeight
                                                                       .bold)),
                                                       IconButton(
-                                                          icon: Icon(
+                                                          icon: const Icon(
                                                               Icons.delete),
                                                           onPressed: () {
                                                             delete(
