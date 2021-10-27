@@ -23,7 +23,10 @@ class _ProfilState extends State<Profil> {
         backgroundColor: Colors.white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[const TopBar('Profile'), form()],
+          children: <Widget>[
+            const TopBar('Profile'),
+            Expanded(child: SingleChildScrollView(child: form()))
+          ],
         ));
   }
 
