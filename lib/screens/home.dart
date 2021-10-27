@@ -120,12 +120,12 @@ class BasketButton extends StatelessWidget {
           int cartCount = snapshot.data ?? 0;
           return IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Basket(),
-                  ),
-                );
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (context) {
+                      return const Basket();
+                    });
               },
               splashRadius: 25,
               icon: cartCount > 0
