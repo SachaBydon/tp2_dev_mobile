@@ -181,11 +181,21 @@ class _DetailState extends State<Detail> {
         addedTobasket = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${clothe.title} ajouté au panier')),
+        SnackBar(
+          content: Text('${clothe.title} ajouté au panier'),
+          duration: const Duration(milliseconds: 1500),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
+        SnackBar(
+          content: Text(error.toString()),
+          duration: const Duration(milliseconds: 1500),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+        ),
       );
     });
   }

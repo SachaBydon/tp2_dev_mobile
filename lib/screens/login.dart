@@ -163,7 +163,11 @@ class _LoginState extends State<Login> {
     }).catchError((e) {
       //Authentication failed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().split('] ')[1])),
+        SnackBar(
+            content: Text(e.toString().split('] ')[1]),
+            duration: const Duration(milliseconds: 1500),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.red),
       );
     });
   }
