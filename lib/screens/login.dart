@@ -5,9 +5,6 @@ import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
-  //Function to be called when the user is logged in
-  // final Function login;
-
   const Login({
     Key? key,
     /*required this.login*/
