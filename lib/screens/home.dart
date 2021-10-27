@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tp2_dev_mobile/models/app_state.dart';
@@ -28,28 +29,33 @@ class _HomeState extends State<Home> {
   final AppState appState = GetIt.instance.get<AppState>();
 
   @override
-  void initState() {
-    super.initState();
-    getAuthData();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        body: DefaultTabController(
-          length: tabs.length,
-          child: Column(
-            children: <Widget>[
-              const TopBar(),
-              ArticlesTabs(tabs),
-              const ListItems()
-            ],
-          ),
+        body: FutureBuilder(
+          future: getAuthData(),
+          builder: (context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return DefaultTabController(
+                length: tabs.length,
+                child: Column(
+                  children: <Widget>[
+                    const TopBar(),
+                    ArticlesTabs(tabs),
+                    const ListItems()
+                  ],
+                ),
+              );
+            }
+          },
         ));
   }
 
-  getAuthData() async {
+  Future<User?> getAuthData() async {
     String? userLogin;
     String? userPassword;
 
@@ -63,11 +69,10 @@ class _HomeState extends State<Home> {
 
     if (userLogin == null || userPassword == null) return null;
 
-    authHandler.handleSignInEmail(userLogin, userPassword).then((user) {
-      //Authentication successful
-      appState.login(user);
-      appState.updateCartCount();
-    });
+    var user = await authHandler.handleSignInEmail(userLogin, userPassword);
+    appState.login(user);
+    appState.updateCartCount();
+    return user;
   }
 }
 
