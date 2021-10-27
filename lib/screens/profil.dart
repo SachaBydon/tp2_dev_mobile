@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tp2_dev_mobile/models/app_state.dart';
 
-import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
@@ -15,7 +15,7 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  final userState = GetIt.instance.get<UserState>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +140,7 @@ class _ProfilState extends State<Profil> {
 
   logOut() async {
     FirebaseAuth.instance.signOut();
-    userState.logout();
+    appState.logout();
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -156,7 +156,7 @@ class _ProfilState extends State<Profil> {
   submit(UserData userData) async {
     FocusScope.of(context).unfocus();
 
-    String userUID = userState.current?.uid ?? '';
+    String userUID = appState.user?.uid ?? '';
 
     await FirebaseFirestore.instance.collection('users').doc(userUID).update({
       'address': userData.address,
@@ -171,8 +171,8 @@ class _ProfilState extends State<Profil> {
   }
 
   Future<UserData> getDefaultData() async {
-    var userUID = userState.current?.uid ?? '';
-    var userEmail = userState.current?.email ?? '';
+    var userUID = appState.user?.uid ?? '';
+    var userEmail = appState.user?.email ?? '';
     var userFakePassword = '............';
 
     DocumentSnapshot<Map<String, dynamic>> query =

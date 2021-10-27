@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
-import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/profil.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:tp2_dev_mobile/screens/login.dart';
 import 'package:tp2_dev_mobile/screens/detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tp2_dev_mobile/models/test_global.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,8 +25,7 @@ class _HomeState extends State<Home> {
   ];
 
   var authHandler = Auth();
-  final userState = GetIt.instance.get<UserState>();
-  final counter = GetIt.instance.get<Counter>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   @override
   void initState() {
@@ -67,10 +65,8 @@ class _HomeState extends State<Home> {
 
     authHandler.handleSignInEmail(userLogin, userPassword).then((user) {
       //Authentication successful
-      userState.login(user);
-      userState.getCartCount().then((value) {
-        counter.setCounter(value);
-      });
+      appState.login(user);
+      appState.updateCartCount();
     });
   }
 }
@@ -114,12 +110,12 @@ class TopBar extends StatelessWidget {
 class BasketButton extends StatelessWidget {
   BasketButton({Key? key}) : super(key: key);
 
-  final counter = GetIt.instance.get<Counter>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: counter.stream$,
+        stream: appState.streamBasketCounter,
         builder: (context, AsyncSnapshot<int> snapshot) {
           int cartCount = snapshot.data ?? 0;
           return IconButton(
@@ -230,7 +226,6 @@ class _ListItemsState extends State<ListItems> {
         child: SizedBox(
             width: double.infinity,
             child: TabBarView(
-              // controller: widget.tabController,
               children: [
                 page(0),
                 page(1),

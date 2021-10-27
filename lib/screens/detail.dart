@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tp2_dev_mobile/models/app_state.dart';
 
 import 'package:tp2_dev_mobile/models/clothe.dart';
-import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
-import 'package:tp2_dev_mobile/models/test_global.dart';
 import 'package:get_it/get_it.dart';
 
 class Detail extends StatefulWidget {
@@ -17,8 +16,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  final counter = GetIt.instance.get<Counter>();
-  final userState = GetIt.instance.get<UserState>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   bool addedTobasket = false;
 
@@ -28,7 +26,7 @@ class _DetailState extends State<Detail> {
 
     return Scaffold(
         body: FutureBuilder(
-            future: userState.checkIfInBasket(widget.clothe),
+            future: appState.checkIfInBasket(widget.clothe),
             builder: (context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasData) {
                 bool isInBasket = (snapshot.data ?? false) || addedTobasket;
@@ -171,16 +169,14 @@ class _DetailState extends State<Detail> {
   void buy(Clothe clothe) async {
     print('buy ${clothe.id}');
 
-    var userUID = userState.current.uid ?? '';
-    // var userUID = authContext.user?.uid ?? '';
+    var userUID = appState.user?.uid ?? '';
 
     print('res: ' + userUID);
 
     await FirebaseFirestore.instance.collection('paniers').doc(userUID).update({
       'items': FieldValue.arrayUnion([clothe.id])
     }).then((_) async {
-      int basketCounter = await userState.getCartCount();
-      counter.setCounter(basketCounter);
+      appState.updateCartCount();
       setState(() {
         addedTobasket = true;
       });

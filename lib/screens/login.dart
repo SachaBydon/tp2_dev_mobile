@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:tp2_dev_mobile/models/auth.dart';
+import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -159,8 +159,8 @@ class _LoginState extends State<Login> {
       loginValue, passwordValue, context, authHandler) async {
     authHandler.handleSignInEmail(loginValue, passwordValue).then((user) {
       //Authentication successful
-      var userState = GetIt.instance.get<UserState>();
-      userState.login(user);
+      AppState appState = GetIt.instance.get<AppState>();
+      appState.login(user);
       saveAuthData(loginValue, passwordValue);
       Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {

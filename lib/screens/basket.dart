@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
-import 'package:tp2_dev_mobile/models/auth.dart';
-import 'package:tp2_dev_mobile/models/test_global.dart';
 
 class Basket extends StatefulWidget {
   const Basket({Key? key}) : super(key: key);
@@ -15,7 +13,7 @@ class Basket extends StatefulWidget {
 }
 
 class _BasketState extends State<Basket> {
-  final user = GetIt.instance.get<UserState>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,7 @@ class _BasketState extends State<Basket> {
     var listHeight = MediaQuery.of(context).size.height - 56 - 80 - totalHeight;
 
     return StreamBuilder(
-        stream: user.stream$,
+        stream: appState.streamUser,
         builder: (context, AsyncSnapshot<User?> userSnapshot) {
           String userId = userSnapshot.data?.uid ?? '';
           print('userId: ' + userId);
@@ -163,13 +161,11 @@ class _BasketState extends State<Basket> {
 
   void delete(String userId, Clothe clothe) async {
     print('delete: ' + clothe.id);
-    var counter = GetIt.instance.get<Counter>();
 
     await FirebaseFirestore.instance.collection('paniers').doc(userId).update({
       'items': FieldValue.arrayRemove([clothe.id])
     }).then((_) async {
-      int backetCounter = await user.getCartCount();
-      counter.setCounter(backetCounter);
+      appState.updateCartCount();
       print('res: item updated');
     }).catchError((error) {
       print('res: error: $error');
