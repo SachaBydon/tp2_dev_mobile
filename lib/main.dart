@@ -11,6 +11,7 @@ GetIt getIt = GetIt.instance;
 
 //TODO: Ajouter une page d'ajout de produit
 //TODO: Ajouter une page de création de compte
+//TODO: Stocker la photo de profile sur firebase
 void main() async {
   //Wait Firebase is fully initialized before starting the app
   WidgetsFlutterBinding.ensureInitialized();
