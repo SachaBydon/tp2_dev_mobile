@@ -189,26 +189,31 @@ class _ArticlesTabsState extends State<ArticlesTabs> {
       _tabController?.animation?.addListener(tabChangedListener);
     }
 
-    return TabBar(
-      indicatorSize: TabBarIndicatorSize.label,
-      padding: const EdgeInsets.only(bottom: 10),
-      indicator: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      tabs: widget.tabs.map((item) {
-        return Tab(
-          height: 35,
-          child: Center(
-            child: Text(item['label'],
-                style: TextStyle(
-                    color: item['id'] == _selectedIndex
-                        ? Colors.white
-                        : Colors.black)),
+    return Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: TabBar(
+          indicatorSize: TabBarIndicatorSize.label,
+          padding: const EdgeInsets.only(bottom: 10),
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Theme.of(context).colorScheme.primary,
           ),
-        );
-      }).toList(),
-    );
+          tabs: widget.tabs.map((item) {
+            return Tab(
+              height: 35,
+              child: Center(
+                child: Text(item['label'],
+                    style: TextStyle(
+                        color: item['id'] == _selectedIndex
+                            ? Colors.white
+                            : Colors.black)),
+              ),
+            );
+          }).toList(),
+        ));
   }
 }
 

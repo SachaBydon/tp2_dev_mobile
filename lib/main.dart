@@ -51,8 +51,6 @@ class _MyAppState extends State<MyApp> {
               title: 'Vinted',
               initialRoute: (snapshot.data ?? false) ? '/home' : '/login',
               theme: ThemeData(
-                bottomSheetTheme: BottomSheetThemeData(
-                    backgroundColor: Colors.black.withOpacity(0)),
                 canvasColor: Colors.transparent,
                 colorScheme: const ColorScheme.light(
                   primary: Color(0xff26AE60),
