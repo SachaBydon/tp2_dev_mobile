@@ -35,15 +35,15 @@ class _BasketState extends State<Basket> {
                           if (snapshot.hasData) {
                             return Column(children: [
                               Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 20, bottom: 15),
-                                  height: 7,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(.2),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(25),
-                                      ))),
+                                margin:
+                                    const EdgeInsets.only(top: 20, bottom: 15),
+                                width: 70,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                               const Center(
                                   child: Text('Panier',
                                       style: TextStyle(
