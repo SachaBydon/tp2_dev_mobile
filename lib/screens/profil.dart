@@ -43,35 +43,54 @@ class _ProfilState extends State<Profil> {
                     initialValue: userData.email,
                     keyboardType: TextInputType.emailAddress,
                     enabled: false,
-                    decoration: const InputDecoration(
-                      labelText: 'email',
-                      isDense: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      labelText: 'Email',
                     )),
                 TextFormField(
                   initialValue: userData.password,
                   obscureText: true,
                   enabled: false,
-                  decoration: const InputDecoration(
-                    labelText: 'password',
-                    isDense: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    labelText: 'Mot de passe',
                   ),
                   onChanged: (value) {
                     userData.password = value.toString();
                   },
                 ),
-                InputDatePickerFormField(
-                  initialDate: DateTime.parse(userData.birth),
-                  firstDate: DateTime(1970),
-                  lastDate: DateTime.now(),
-                  onDateSaved: (date) {
-                    userData.birth = date.toString();
-                  },
+                Container(
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey)),
+                  child: Theme(
+                    data: ThemeData(
+                        colorScheme:
+                            const ColorScheme.light(primary: Color(0xff26AE60)),
+                        inputDecorationTheme: const InputDecorationTheme(
+                          border: InputBorder.none,
+                        )),
+                    child: InputDatePickerFormField(
+                      fieldHintText: 'Date de naissance',
+                      fieldLabelText: 'Date de naissance',
+                      initialDate: DateTime.parse(userData.birth),
+                      firstDate: DateTime(1970),
+                      lastDate: DateTime.now(),
+                      onDateSaved: (date) {
+                        userData.birth = date.toString();
+                      },
+                    ),
+                  ),
                 ),
                 TextFormField(
                   initialValue: userData.address,
-                  decoration: const InputDecoration(
-                    labelText: 'address',
-                    isDense: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    labelText: 'Adresse',
                   ),
                   onChanged: (value) {
                     userData.address = value.toString();
@@ -79,9 +98,10 @@ class _ProfilState extends State<Profil> {
                 ),
                 TextFormField(
                   initialValue: userData.postcode,
-                  decoration: const InputDecoration(
-                    labelText: 'postcode',
-                    isDense: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    labelText: 'Code postale',
                   ),
                   onChanged: (value) {
                     userData.postcode = value.toString();
@@ -89,9 +109,10 @@ class _ProfilState extends State<Profil> {
                 ),
                 TextFormField(
                   initialValue: userData.city,
-                  decoration: const InputDecoration(
-                    labelText: 'city',
-                    isDense: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    labelText: 'Ville',
                   ),
                   onChanged: (value) {
                     userData.city = value.toString();
@@ -104,27 +125,53 @@ class _ProfilState extends State<Profil> {
                   children: [
                     ElevatedButton(
                       onPressed: () => submit(userData),
-                      child: const Text('Valider'),
+                      child: Wrap(
+                        runAlignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 10,
+                        children: const [
+                          Icon(Icons.check),
+                          Text(
+                            'Valider',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          )
+                        ],
+                      ),
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.only(bottom: 14, top: 14),
                         minimumSize: Size(
                             (MediaQuery.of(context).size.width - 50) / 2, 30),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () => logOut(),
-                      child: const Text('Se déconnecter'),
+                      child: Wrap(
+                        runAlignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 10,
+                        children: const [
+                          Icon(Icons.logout),
+                          Text(
+                            'Se déconnecter',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          )
+                        ],
+                      ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red[500],
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.only(bottom: 14, top: 14),
                         minimumSize: Size(
                             (MediaQuery.of(context).size.width - 50) / 2, 30),
                       ),
