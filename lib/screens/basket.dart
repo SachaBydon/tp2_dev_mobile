@@ -177,7 +177,7 @@ class _BasketState extends State<Basket> {
     List<Clothe> clothes = [];
     for (var doc in itemsQuery.docs) {
       clothes.add(Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
-          doc['taille'], doc['marque']));
+          doc['taille'], doc['marque'], doc['category']));
     }
     return clothes;
   }

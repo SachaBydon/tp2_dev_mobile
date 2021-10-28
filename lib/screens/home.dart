@@ -7,9 +7,11 @@ import 'package:tp2_dev_mobile/screens/profil.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:tp2_dev_mobile/screens/login.dart';
 import 'package:tp2_dev_mobile/screens/detail.dart';
+import 'package:tp2_dev_mobile/screens/new_product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -31,6 +33,17 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => NewProduct()));
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.white,
         body: FutureBuilder(
           future: getAuthData(),
@@ -44,7 +57,7 @@ class _HomeState extends State<Home> {
                 length: tabs.length,
                 child: Column(
                   children: <Widget>[
-                    const TopBar(),
+                    TopBar(),
                     ArticlesTabs(tabs),
                     const ListItems()
                   ],
@@ -72,12 +85,23 @@ class _HomeState extends State<Home> {
     var user = await authHandler.handleSignInEmail(userLogin, userPassword);
     appState.login(user);
     appState.updateCartCount();
+    var profilePicture = await getProfilePicture(user.uid);
+    appState.setProfilePicture(profilePicture);
     return user;
+  }
+
+  Future<String> getProfilePicture(String userId) async {
+    var profile =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    return profile['photo'];
   }
 }
 
 class TopBar extends StatelessWidget {
-  const TopBar({Key? key}) : super(key: key);
+  TopBar({Key? key}) : super(key: key);
+
+  AppState appState = GetIt.instance.get<AppState>();
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +111,7 @@ class TopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
+            borderRadius: BorderRadius.circular(50),
             onTap: () => {
               Navigator.push(
                 context,
@@ -95,14 +120,16 @@ class TopBar extends StatelessWidget {
                 ),
               )
             },
-            child: const Padding(
-                padding: EdgeInsets.all(5),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage('images/profile.png'),
-                )),
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
+            child: Padding(
+              padding: EdgeInsets.all(5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.memory(
+                  base64Decode(appState.profilePicture),
+                  width: 40,
+                  height: 40,
+                ),
+              ),
             ),
           ),
           BasketButton(),
@@ -230,147 +257,129 @@ class ListItems extends StatefulWidget {
 }
 
 class _ListItemsState extends State<ListItems> {
+  AppState appState = GetIt.instance.get<AppState>();
+
+  @override
+  void initState() {
+    super.initState();
+    appState.reloadClothesList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: SizedBox(
-            width: double.infinity,
-            child: TabBarView(
-              children: [
-                page(0),
-                page(1),
-                page(2),
-              ],
-            )));
+    return StreamBuilder(
+      stream: appState.clothesStream,
+      builder: (context, AsyncSnapshot<List<List<Clothe>>> snapshot) {
+        List<List<Clothe>> data = snapshot.data ?? [];
+        if (data.isEmpty || data[0].isEmpty) {
+          return const Expanded(
+              child: Center(
+            child: CircularProgressIndicator(),
+          ));
+        } else {
+          return Expanded(
+              child: SizedBox(
+                  width: double.infinity,
+                  child: TabBarView(
+                    children: [
+                      page(data[0]),
+                      page(data[1]),
+                      page(data[2]),
+                    ],
+                  )));
+        }
+      },
+    );
   }
 
-  Widget page(id) {
-    return FutureBuilder(
-        future: getAllItems(id),
-        builder: (context, AsyncSnapshot<List<Clothe>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return SingleChildScrollView(
-                child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                direction: Axis.horizontal,
-                runSpacing: 10,
-                children: snapshot.data
-                        ?.map((item) => Container(
-                            width: (MediaQuery.of(context).size.width / 2) - 30,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: Colors.black26, width: .5),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Center(
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(10),
-                                                      topRight:
-                                                          Radius.circular(10)),
-                                              child: SizedBox(
-                                                  width: (MediaQuery
-                                                                  .of(context)
-                                                              .size
-                                                              .width /
-                                                          2) -
-                                                      30,
-                                                  height:
-                                                      (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2) -
-                                                          30,
-                                                  child: Image.network(
-                                                    item.image,
-                                                    fit: BoxFit.cover,
-                                                  )))),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                          height: 50,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(item.title,
-                                                  style: const TextStyle(
-                                                      fontSize: 20)),
-                                              Text('Taille: ${item.size}'),
-                                            ],
-                                          )),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text('${item.price}€',
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold)),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ]),
-                                Positioned.fill(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Detail(
-                                              clothe: item,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      customBorder: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ),
+  Widget page(List<Clothe> clothes) {
+    return SingleChildScrollView(
+        child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        direction: Axis.horizontal,
+        runSpacing: 10,
+        children: clothes
+            .map((item) => Container(
+                width: (MediaQuery.of(context).size.width / 2) - 30,
+                margin: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black26, width: .5),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Center(
+                              child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10)),
+                                  child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width /
+                                                  2) -
+                                              30,
+                                      height:
+                                          (MediaQuery.of(context).size.width /
+                                                  2) -
+                                              30,
+                                      child: Image.network(
+                                        item.image,
+                                        fit: BoxFit.cover,
+                                      )))),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              height: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(item.title,
+                                      style: const TextStyle(fontSize: 20)),
+                                  Text('Taille: ${item.size}'),
+                                ],
+                              )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text('${item.price}€',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ]),
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Detail(
+                                  clothe: item,
                                 ),
-                              ],
-                            )))
-                        .toList() ??
-                    [],
-              ),
-            ));
-          }
-        });
-  }
-
-  Future<List<Clothe>> getAllItems(category) async {
-    QuerySnapshot? querySnapshot;
-    var clothesCollection = FirebaseFirestore.instance.collection('clothes');
-    if (category == 0) {
-      querySnapshot = await clothesCollection.get();
-    } else {
-      querySnapshot =
-          await clothesCollection.where('category', isEqualTo: category).get();
-    }
-
-    return querySnapshot.docs.map((doc) {
-      return Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
-          doc['taille'], doc['marque']);
-    }).toList();
+                              ),
+                            );
+                          },
+                          customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )))
+            .toList(),
+      ),
+    ));
   }
 }

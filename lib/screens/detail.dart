@@ -116,10 +116,12 @@ class _DetailState extends State<Detail> {
                                   Expanded(child: Container()),
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 18, top: 18),
                                           shadowColor: Colors.transparent,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(20),
                                           ),
                                           minimumSize:
                                               const Size(double.infinity, 50)),
@@ -140,7 +142,6 @@ class _DetailState extends State<Detail> {
                                                 : 'Ajouter au panier',
                                             style: const TextStyle(
                                               fontSize: 16,
-                                              fontWeight: FontWeight.bold,
                                             ),
                                           )
                                         ],

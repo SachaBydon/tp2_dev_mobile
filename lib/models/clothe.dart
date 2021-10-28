@@ -5,7 +5,9 @@ class Clothe {
   String image;
   String size;
   String brand;
-  Clothe(this.id, this.title, this.price, this.image, this.size, this.brand);
+  int category;
+  Clothe(this.id, this.title, this.price, this.image, this.size, this.brand,
+      this.category);
 
   @override
   String toString() {

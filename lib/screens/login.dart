@@ -108,7 +108,9 @@ class _LoginState extends State<Login> {
                               ElevatedButton(
                                 onPressed: () => submitForm(),
                                 child: const Text('Se connecter',
-                                    style: TextStyle(fontSize: 16)),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
                                 style: ElevatedButton.styleFrom(
                                   shadowColor: Colors.transparent,
                                   shape: RoundedRectangleBorder(

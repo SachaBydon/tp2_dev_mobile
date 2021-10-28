@@ -48,4 +48,41 @@ class AppState {
     }
     return false;
   }
+
+  final BehaviorSubject<String> _profilePicture = BehaviorSubject.seeded('');
+  get profilePictureStream => _profilePicture.stream;
+  String get profilePicture => _profilePicture.value;
+
+  void setProfilePicture(String val) {
+    _profilePicture.add(val);
+  }
+
+  final BehaviorSubject<List<List<Clothe>>> _clothes = BehaviorSubject.seeded([
+    [],
+    [],
+    [],
+  ]);
+  get clothesStream => _clothes.stream;
+  List<List<Clothe>> get clothes => _clothes.value;
+
+  void reloadClothesList() async {
+    List<List<Clothe>> new_clothes = [
+      [],
+      [],
+      [],
+    ];
+    _clothes.add(new_clothes);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance.collection('clothes').get();
+
+    querySnapshot.docs.forEach((doc) {
+      Clothe clothe = Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
+          doc['taille'], doc['marque'], doc['category']);
+      new_clothes[0].add(clothe);
+      if (clothe.category == 1 || clothe.category == 2) {
+        new_clothes[clothe.category].add(clothe);
+      }
+    });
+    _clothes.add(new_clothes);
+  }
 }
