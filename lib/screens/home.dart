@@ -327,10 +327,15 @@ class _ListItemsState extends State<ListItems> {
                                           (MediaQuery.of(context).size.width /
                                                   2) -
                                               30,
-                                      child: Image.network(
-                                        item.image,
-                                        fit: BoxFit.cover,
-                                      )))),
+                                      child: (item.image[0] == '/')
+                                          ? Image.memory(
+                                              base64Decode(item.image),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              item.image,
+                                              fit: BoxFit.cover,
+                                            )))),
                           const SizedBox(
                             height: 10,
                           ),

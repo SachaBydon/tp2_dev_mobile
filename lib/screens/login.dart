@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.grey.shade300,
         body: SizedBox(
             height: double.infinity,
             child: Wrap(runAlignment: WrapAlignment.end, children: [
@@ -150,7 +150,7 @@ class _LoginState extends State<Login> {
                         child: Column(
                           children: [
                             Text('Vous n\'avez pas de compte ?',
-                                style: TextStyle(color: Colors.grey[600])),
+                                style: TextStyle(color: Colors.grey.shade600)),
                             Text('Créer un compte',
                                 style: TextStyle(
                                     color:
@@ -174,9 +174,13 @@ class _LoginState extends State<Login> {
       Navigator.pushReplacementNamed(context, '/home');
     }).catchError((e) {
       //Authentication failed
+      String errorMessage = e.toString();
+      if (errorMessage.split('] ').length > 1) {
+        errorMessage = errorMessage.split('] ')[1];
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(e.toString().split('] ')[1]),
+            content: Text(errorMessage),
             duration: const Duration(milliseconds: 1500),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.red),

@@ -5,6 +5,7 @@ import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:get_it/get_it.dart';
+import 'dart:convert';
 
 class Detail extends StatefulWidget {
   final Clothe clothe;
@@ -37,8 +38,15 @@ class _DetailState extends State<Detail> {
                         SizedBox(
                             height: imageSize,
                             width: double.infinity,
-                            child: Image.network(widget.clothe.image,
-                                fit: BoxFit.cover)),
+                            child: (widget.clothe.image[0] == '/')
+                                ? Image.memory(
+                                    base64Decode(widget.clothe.image),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    widget.clothe.image,
+                                    fit: BoxFit.cover,
+                                  )),
                         Container(
                             margin: EdgeInsets.only(top: imageSize - 30),
                             height: MediaQuery.of(context).size.height -
@@ -69,7 +77,7 @@ class _DetailState extends State<Detail> {
                                       width: 70,
                                       height: 6,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Colors.grey.shade300,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),

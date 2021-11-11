@@ -166,7 +166,7 @@ class _ProfilState extends State<Profil> {
                         ],
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.red[500],
+                        primary: Colors.red.shade500,
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

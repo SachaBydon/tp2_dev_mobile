@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
+import 'dart:convert';
 
 class Basket extends StatefulWidget {
   const Basket({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _BasketState extends State<Basket> {
                                 width: 70,
                                 height: 6,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[300],
+                                  color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
@@ -77,16 +78,33 @@ class _BasketState extends State<Basket> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           10),
-                                                              child:
-                                                                  Image.network(
-                                                                snapshot
-                                                                    .data![i]
-                                                                    .image,
-                                                                height: 50,
-                                                                width: 50,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              )))),
+                                                              child: (snapshot
+                                                                          .data![
+                                                                              i]
+                                                                          .image[0] ==
+                                                                      '/')
+                                                                  ? Image.memory(
+                                                                      base64Decode(snapshot
+                                                                          .data![
+                                                                              i]
+                                                                          .image),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                    )
+                                                                  : Image.network(
+                                                                      snapshot
+                                                                          .data![
+                                                                              i]
+                                                                          .image,
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )))),
                                                   SizedBox(
                                                       child: Column(
                                                     crossAxisAlignment:
@@ -206,7 +224,7 @@ class _BasketState extends State<Basket> {
       }
     }
 
-    return total;
+    return (total * 100).round() / 100;
   }
 }
 
