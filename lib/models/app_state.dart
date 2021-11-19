@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:tp2_dev_mobile/models/clothe.dart';
 
 class AppState {
@@ -49,14 +50,6 @@ class AppState {
     return false;
   }
 
-  final BehaviorSubject<String> _profilePicture = BehaviorSubject.seeded('');
-  get profilePictureStream => _profilePicture.stream;
-  String get profilePicture => _profilePicture.value;
-
-  void setProfilePicture(String val) {
-    _profilePicture.add(val);
-  }
-
   final BehaviorSubject<List<List<Clothe>>> _clothes = BehaviorSubject.seeded([
     [],
     [],
@@ -66,23 +59,23 @@ class AppState {
   List<List<Clothe>> get clothes => _clothes.value;
 
   void reloadClothesList() async {
-    List<List<Clothe>> new_clothes = [
+    List<List<Clothe>> newClothes = [
       [],
       [],
       [],
     ];
-    _clothes.add(new_clothes);
+    _clothes.add(newClothes);
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance.collection('clothes').get();
 
     querySnapshot.docs.forEach((doc) {
       Clothe clothe = Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
           doc['taille'], doc['marque'], doc['category']);
-      new_clothes[0].add(clothe);
+      newClothes[0].add(clothe);
       if (clothe.category == 1 || clothe.category == 2) {
-        new_clothes[clothe.category].add(clothe);
+        newClothes[clothe.category].add(clothe);
       }
     });
-    _clothes.add(new_clothes);
+    _clothes.add(newClothes);
   }
 }
