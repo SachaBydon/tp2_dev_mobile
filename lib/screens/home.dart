@@ -1,17 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tp2_dev_mobile/models/auth.dart';
+import 'dart:convert';
+
+import 'package:tp2_dev_mobile/widgets/logo.dart';
 import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
 import 'package:tp2_dev_mobile/screens/profil.dart';
 import 'package:tp2_dev_mobile/screens/basket.dart';
-import 'package:tp2_dev_mobile/screens/login.dart';
 import 'package:tp2_dev_mobile/screens/detail.dart';
 import 'package:tp2_dev_mobile/screens/new_product.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
     {'id': 2, 'label': 'Accessoires'}
   ];
 
-  var authHandler = Auth();
+  AuthActions authHandler = AuthActions();
   final AppState appState = GetIt.instance.get<AppState>();
 
   @override
@@ -36,8 +37,8 @@ class _HomeState extends State<Home> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => NewProduct()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const NewProduct()));
           },
           child: const Icon(
             Icons.add,
@@ -82,19 +83,11 @@ class _HomeState extends State<Home> {
 
     if (userLogin == null || userPassword == null) return null;
 
-    var user = await authHandler.handleSignInEmail(userLogin, userPassword);
+    User user = await authHandler.handleSignInEmail(userLogin, userPassword);
     appState.login(user);
     appState.updateCartCount();
-    var profilePicture = await getProfilePicture(user.uid);
-    appState.setProfilePicture(profilePicture);
+
     return user;
-  }
-
-  Future<String> getProfilePicture(String userId) async {
-    var profile =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    return profile['photo'];
   }
 }
 
@@ -110,9 +103,9 @@ class TopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(50),
-            onTap: () => {
+          IconButton(
+            splashRadius: 25,
+            onPressed: () => {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -120,18 +113,12 @@ class TopBar extends StatelessWidget {
                 ),
               )
             },
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image.memory(
-                  base64Decode(appState.profilePicture),
-                  width: 40,
-                  height: 40,
-                ),
-              ),
+            icon: const Icon(
+              Icons.account_circle,
+              size: 30,
             ),
           ),
+          Logo(small: true),
           BasketButton(),
         ],
       ),
@@ -256,7 +243,7 @@ class ListItems extends StatefulWidget {
   _ListItemsState createState() => _ListItemsState();
 }
 
-class _ListItemsState extends State<ListItems> {
+class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
   AppState appState = GetIt.instance.get<AppState>();
 
   @override
@@ -293,6 +280,9 @@ class _ListItemsState extends State<ListItems> {
   }
 
   Widget page(List<Clothe> clothes) {
+    double itemWidth = (MediaQuery.of(context).size.width / 2) - 30;
+    double itemHeight = (MediaQuery.of(context).size.width / 2) - 30;
+
     return SingleChildScrollView(
         child: Padding(
       padding: const EdgeInsets.all(20),
@@ -319,14 +309,8 @@ class _ListItemsState extends State<ListItems> {
                                       topLeft: Radius.circular(10),
                                       topRight: Radius.circular(10)),
                                   child: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width /
-                                                  2) -
-                                              30,
-                                      height:
-                                          (MediaQuery.of(context).size.width /
-                                                  2) -
-                                              30,
+                                      width: itemWidth,
+                                      height: itemHeight,
                                       child: (item.image[0] == '/')
                                           ? Image.memory(
                                               base64Decode(item.image),
@@ -366,14 +350,19 @@ class _ListItemsState extends State<ListItems> {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Detail(
-                                  clothe: item,
-                                ),
-                              ),
-                            );
+                            AnimationController _animationController =
+                                BottomSheet.createAnimationController(this);
+                            showModalBottomSheet(
+                                transitionAnimationController:
+                                    _animationController,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) {
+                                  return Detail(
+                                      clothe: item,
+                                      controller: _animationController);
+                                });
                           },
                           customBorder: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
