@@ -6,11 +6,13 @@ import 'package:tp2_dev_mobile/models/app_state.dart';
 
 import 'package:tp2_dev_mobile/screens/home.dart';
 import 'package:tp2_dev_mobile/screens/login.dart';
+import 'package:tp2_dev_mobile/screens/signin.dart';
 
 GetIt getIt = GetIt.instance;
 
-//TODO: Améliorer la page d'ajout de produit
-//TODO: Ajouter une page de création de compte
+//TODO: Ajouter commentaires
+//TODO: Faire un rapport
+
 void main() async {
   //Wait Firebase is fully initialized before starting the app
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   Future<bool> aslogin() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      var userLogin = prefs.getString('user_login');
+      String? userLogin = prefs.getString('user_login');
       return (userLogin != null);
     } catch (e) {
       print(e);
@@ -53,17 +55,26 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeData(
                 canvasColor: Colors.transparent,
                 colorScheme: const ColorScheme.light(
-                  primary: Color(0xff26AE60),
-                  secondary: Color(0xff26AE60),
+                  primary: Color(0xff02B2BB),
+                  secondary: Color(0xff02B2BB),
+                  secondaryVariant: Color(0xff26AE60),
                 ),
               ),
               routes: {
                 '/login': (context) => const Login(),
+                '/signin': (context) => const Signin(),
                 '/home': (context) => const Home(),
               },
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              builder: (context, child) {
+                return const Scaffold(
+                  backgroundColor: Colors.white,
+                );
+              },
+            );
           }
         });
   }
