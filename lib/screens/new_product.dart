@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:tp2_dev_mobile/models/app_state.dart';
-import 'package:tp2_dev_mobile/models/clothe.dart';
-import 'package:tp2_dev_mobile/screens/basket.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
+
+import 'package:tp2_dev_mobile/models/app_state.dart';
+import 'package:tp2_dev_mobile/models/clothe.dart';
+
+import 'package:tp2_dev_mobile/utils.dart';
+import 'package:tp2_dev_mobile/widgets/topbar.dart';
 
 class NewProduct extends StatefulWidget {
   const NewProduct({Key? key}) : super(key: key);
@@ -53,7 +56,6 @@ class _FormProductState extends State<FormProduct> {
         return;
       }
       _clothe.category = _category ?? 0;
-      print(_clothe);
 
       FirebaseFirestore.instance.collection('clothes').add({
         'titre': _clothe.title,
@@ -67,7 +69,7 @@ class _FormProductState extends State<FormProduct> {
           content: Text('${_clothe.title} ajouté !'),
           duration: const Duration(milliseconds: 1500),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.secondaryVariant,
         ));
         appState.reloadClothesList();
         Navigator.of(context).pop();
@@ -84,24 +86,6 @@ class _FormProductState extends State<FormProduct> {
     }
   }
 
-  textFormFieldDecoration(String label) {
-    return InputDecoration(
-      fillColor: Colors.grey.shade300,
-      filled: true,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary, width: 2.0),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: Colors.grey.shade300, width: 0),
-      ),
-      labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      labelText: label,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -110,7 +94,7 @@ class _FormProductState extends State<FormProduct> {
             key: _formKey,
             child: Wrap(runSpacing: 10, children: [
               TextFormField(
-                decoration: textFormFieldDecoration('Nom'),
+                decoration: textFormFieldDecoration('Nom', context),
                 validator: (value) {
                   if (value == '') {
                     return 'Veuillez entrer un nom';
@@ -122,7 +106,7 @@ class _FormProductState extends State<FormProduct> {
                 },
               ),
               TextFormField(
-                decoration: textFormFieldDecoration('Marque'),
+                decoration: textFormFieldDecoration('Marque', context),
                 validator: (value) {
                   if (value == '') {
                     return 'Veuillez entrer une marque';
@@ -134,7 +118,7 @@ class _FormProductState extends State<FormProduct> {
                 },
               ),
               TextFormField(
-                decoration: textFormFieldDecoration('Taille'),
+                decoration: textFormFieldDecoration('Taille', context),
                 validator: (value) {
                   if (value == '') {
                     return 'Veuillez entrer une taille';
@@ -146,7 +130,7 @@ class _FormProductState extends State<FormProduct> {
                 },
               ),
               TextFormField(
-                decoration: textFormFieldDecoration('Prix'),
+                decoration: textFormFieldDecoration('Prix', context),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == '') {
