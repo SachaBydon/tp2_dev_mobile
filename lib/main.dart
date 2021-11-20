@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tp2_dev_mobile/models/app_state.dart';
+import 'package:flutter/services.dart';
 
 import 'package:tp2_dev_mobile/screens/home.dart';
 import 'package:tp2_dev_mobile/screens/login.dart';
@@ -12,7 +13,6 @@ GetIt getIt = GetIt.instance;
 
 //TODO: Ajouter commentaires
 //TODO: Faire un rapport
-
 void main() async {
   //Wait Firebase is fully initialized before starting the app
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +21,11 @@ void main() async {
   getIt.registerSingleton<AppState>(AppState());
 
   runApp(const MyApp());
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.dark));
 }
 
 class MyApp extends StatefulWidget {
