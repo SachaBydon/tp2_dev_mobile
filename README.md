@@ -1,20 +1,154 @@
-# tp2_dev_mobile
+# TP2 dev mobile SACHA BYDON
 
-A new Flutter project.
+# Critères d’acceptance :
+## US#1 : Interface de login
 
-## Getting Started
+* ### #1  
+  Au lancement de l'application l'interface de login est bien de deux champs et d'un bouton.  
+  EN PLUS:
+  * J'ai créé un widget Logo pour le nom à la place d'un headerBar.
+  * J'ai ajouté un lien "Créer un compte" qui redirige vers la page de création de compte.
 
-This project is a starting point for a Flutter application.
+* ### #2  
+  Les champs de saisie sont Email et mot de passe, qui correspondent respectivement au login et password.
 
-A few resources to get you started if this is your first Flutter project:
+* ### #3  
+  Le champ mot de passe est bien obfusqué par défaut.  
+  EN PLUS:
+  * J'ai ajouté un bouton pour activer ou non l'obfusquage du champ.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+* ### #4:
+  Le label du bouton est bien se connecter.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* ### #5:
+  Au clic sur le bouton de connection je verifie bien si l'utilisateur est en base si c'est le cas il est redirigé vers la page d'accueil. Sinon ou s'il y a une erreur un message est affiché dans une snackbar et l'application reste fonctionelle.
 
-## Firebase
+* ### #6:
+  Si les champs sont vides l'application reste fonctionelle et invite l'utilisateur à remplir les champs.
 
-https://firebase.google.com/docs/flutter/setup?platform=android
+
+## US#2 : Liste de vêtements 
+
+* ### #1,2
+  Une fois connecté l'utilisateur arrive sur la page d'accueil qui contient le contenu principale (la liste de vêtements)  
+  EN PLUS:
+  * À la place d'une BottomNavigationBar j'ai créer un widget TopBar qui continent les boutons pour naviguer vers les pages de profile et de panier.
+
+* ### #3
+  Il y a bien une liste déroulante des vêtements à l'écran.
+
+* ### #4
+  Chaque vêtement à bien un titre, une taille et un prix.  
+  EN PLUS:
+  * Pour les images, j'ai ajouté l'affichage (les images sont stoqué en base soit en lien soit en base64)
+
+* ### #5
+  Au clic sur une entrée de la liste, le détail est bien affiché.
+
+* ### #6
+  La liste de vêtements est bien récupérée de la base de données.
+
+## US#3 : Détail d’un vêtement
+
+* ### #1
+  La page de détail est bien composée d'une image, d'un titre, d'une taille, de la marque et d'un prix.
+
+* ### #2
+  La page contient bien un bouton retour (avec une icon de flêche) qui permet de retourner à la page d'accueil. Et contient bien un bouton d'ajout au panier, qui ajoute l'article au panier.  
+  EN PLUS:
+  * Le bouton d'ajout au panier est désactivé si l'article est déjà dans le panier.
+
+## US#4 : Le panier
+
+* ### #1
+  Au clic sur le bouton Panier, la liste des vêtements du panier de l’utilisateur est bien affichée avec les images, titres, tailles et prix.
+
+* ### #2
+  Un total est bien affiché.
+
+* ### #3
+  À droite de chaque vetement, une poubelle (à la place de la croix) permet à l’utilisateur de retirer un
+produit. Au clic sur celle-ci, le produit est retiré de la liste et le total général mis à jour.
+
+* ### #4 (EN PLUS)
+  Le nombre d'items dans le panier est afficher sur le bouton du panier.
+
+* ### #4
+  Il n'y a pas d'autres boutons.
+
+## US#5 : Profil utilisateur
+
+* ### #1
+  Les informations de l’utilisateur récupérées en base de données sont affichées.
+
+* ### #2
+  Les informations sont : l'email, le mot de passe (obfusqué), la date de naissance, l'adresse, le code postale (nombres uniquement), la ville.  
+  EN PLUS:
+  * Il est possible de modifier l'addresse mail.
+
+* ### #3
+  Un bouton Valider permet bien de sauvegarder les données (en base de données)
+
+* ### #4
+  Un bouton Se déconnecter permet bien de revenir à la page de login.
+
+## US#6 : Filtrer sur la liste des vêtements
+
+### 1#
+  Sur la page d'accueil une TabBar est présente, listant les différentes catégories de vêtements.
+
+### 2#
+  Par défaut, l’entrée "Tous" est sélectionnée et tous les vêtements sont affichés
+
+### 3#
+  Au clic sur une des entrées, la liste est filtrée pour afficher seulement les vêtements correspondants à la catégorie sélectionnée.
+
+## US#7 : Laisser libre cours à votre imagination
+
+### 1# Création de compte
+  Comme dit précédement J'ai ajouté une page de création de compte. Cette page est similaire à la page de login avec un champ "confirmer" pour le mot de passe en plus. Et le bouton Se connecter est remplacé par le bouton s'inscrire, qui va créer un utilisateur dans la base et rediriger vers la page d'accueil.
+
+### 2# Sauvegarde des informations de connexion
+  Si on est connecté, lorsqu'on quitte et relance l'application on est automiquement reconecté avec les identifiant lors de la dernière connection.
+
+### 3# Design
+  Comme expliqué dans le récap des US précédentes. J'ai pris la liberté de changer certains éléments dans le but d'améliorer le design. Mais les fonctionalitées sont toujours respectées.
+
+### 4# Ajout de produit
+  Sur la page d'accueil il y a bouton flottant qui affiche la page d'ajout de produit. Cette page contient les champs textes pour les informations du produit (titre, marque, taille, prix, categorie, image).
+  L'image récupéré depuis la gallerie de photo de l'appareil.
+  Et il y a un bouton ajouté qui ajoute le produit en base, et qui redirige vers la page d'accueil.
+
+# Architecture du projet
+
+  * /lib
+    * /models
+      * app_state.dart  
+      Classe 'AppState', Gère le state global de l'application
+      * auth.dart  
+      Classe 'AuthActions', Gère l'authentification dans l'application
+      * clothe.dart  
+      Classe 'Clothe', Objet qui contient les attributs d'un vêtement
+    * /screens
+      * login.dart (Page de connection)
+      * signin.dart (Page d'inscrption)
+      * home.dart (Page d'accueil/liste de vêtement)
+      * detail.dart (Page détail d'un produit)
+      * basket.dart (Page du panier)
+      * profil.dart (Page de profil)
+      * new_product.dart (Page de création de produit)
+    * /widgets
+      * grab_indicator.dart
+      * logo.dart
+      * topbar.dart
+    * main.dart
+    * utils.dart  
+    Contient des fonctions utiles dans toute l'application.
+
+# Bibliothèques utilisées
+
+J'ai limité l'utilisation des bibliothèques, mais j'ai quand même décider d'en utiliser certaines (en plus des bibliothèques necessaires pour firebase) :
+* `shared_preferences`: Permet d'accéder au stockage de l'appareil. Je l'ai utilisé pour enregistrer les informations de connexion pour la reconnexion automatique.
+* `rxdart` et `get_it`: Permet de gérer un state global pour l'application (plus facile à utiliser que les providers de flutter).
+* `image_picker`: Permet de récupérer une image depuis la gallerie de photo de l'appareil. Je l'ai utilisé pour la page de création de produit.
+* `google_fonts`: Permet d'importer les polices google fonts. je l'ai utilisé pour le logo.

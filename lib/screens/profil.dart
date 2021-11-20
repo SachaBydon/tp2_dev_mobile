@@ -106,6 +106,7 @@ class _ProfilState extends State<Profil> {
                 ),
                 TextFormField(
                   initialValue: userData.postcode,
+                  keyboardType: TextInputType.number,
                   decoration: textFormFieldDecoration('Code postale', context),
                   onChanged: (value) {
                     userData.postcode = value.toString();
