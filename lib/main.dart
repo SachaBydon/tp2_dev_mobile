@@ -12,7 +12,6 @@ import 'package:tp2_dev_mobile/screens/signin.dart';
 GetIt getIt = GetIt.instance;
 
 //TODO: Ajouter commentaires
-//TODO: Faire un rapport
 void main() async {
   //Wait Firebase is fully initialized before starting the app
   WidgetsFlutterBinding.ensureInitialized();

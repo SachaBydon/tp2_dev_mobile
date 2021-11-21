@@ -217,7 +217,6 @@ class _SigninState extends State<Signin> {
       'birth': '',
       'city': '',
       'postcode': '',
-      'photo': '',
     };
 
     try {
