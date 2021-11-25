@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//Firebase Auth class to handle user authentication
 class AuthActions {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // Connecte l'utilisateur
   Future<User> handleSignInEmail(String email, String password) async {
     UserCredential result =
         await auth.signInWithEmailAndPassword(email: email, password: password);
@@ -13,6 +13,7 @@ class AuthActions {
     return user;
   }
 
+  // Inscrit un utilisateur
   Future<User> handleSignUpEmail(String email, String password) async {
     UserCredential result = await auth.createUserWithEmailAndPassword(
         email: email, password: password);
@@ -21,6 +22,7 @@ class AuthActions {
     return user;
   }
 
+  // Enregistre l'utilisateur dans le stockage
   saveAuthData(login, password) async {
     try {
       final prefs = await SharedPreferences.getInstance();

@@ -38,13 +38,17 @@ class FormProduct extends StatefulWidget {
 }
 
 class _FormProductState extends State<FormProduct> {
+  // Données pour le formulaire
   Clothe _clothe = Clothe('', '', 0, '', '', '', 0);
   int? _category = 0;
   final _formKey = GlobalKey<FormState>();
+
   final AppState appState = GetIt.instance.get<AppState>();
 
   void submitForm() {
     FocusScope.of(context).unfocus();
+
+    // Vérifie que les champs sont remplis
     if (_formKey.currentState!.validate()) {
       if (_clothe.image == '') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -57,6 +61,7 @@ class _FormProductState extends State<FormProduct> {
       }
       _clothe.category = _category ?? 0;
 
+      // Ajoute le produit dans la base de données
       FirebaseFirestore.instance.collection('clothes').add({
         'titre': _clothe.title,
         'taille': _clothe.size,
@@ -249,12 +254,14 @@ class _ImagePickerButtonState extends State<ImagePickerButton> {
   var _image;
 
   _getFromGallery() async {
+    // Récupération de l'image
     var pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
       });
 
+      // Conversion de l'image en base64
       List<int> imageBytes = await _image.readAsBytes();
       String base64Image = base64Encode(imageBytes);
       widget.onChanged(base64Image);

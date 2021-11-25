@@ -26,6 +26,7 @@ class _DetailState extends State<Detail> {
   bool addedTobasket = false;
 
   double imageOpacity = 0;
+  double borderRadius = 0;
 
   @override
   void initState() {
@@ -41,7 +42,13 @@ class _DetailState extends State<Detail> {
 
   updateImageOpacity() {
     setState(() {
-      imageOpacity = widget.controller?.value ?? 0;
+      double progress = widget.controller?.value ?? 0;
+
+      imageOpacity = progress;
+
+      double radius = (1 - progress) * 200;
+      if (radius > 30) radius = 30;
+      borderRadius = radius;
     });
   }
 
@@ -54,133 +61,143 @@ class _DetailState extends State<Detail> {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             bool isInBasket = (snapshot.data ?? false) || addedTobasket;
-            return Column(
-              children: [
-                Stack(
+            return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(borderRadius),
+                    topRight: Radius.circular(borderRadius),
+                  ),
+                ),
+                clipBehavior: Clip.hardEdge,
+                child: Column(
                   children: [
-                    SizedBox(
-                        height: imageSize,
-                        width: double.infinity,
-                        child: Opacity(
-                            opacity: imageOpacity,
-                            child: (widget.clothe.image[0] == '/')
-                                ? Image.memory(
-                                    base64Decode(widget.clothe.image),
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.network(
-                                    widget.clothe.image,
-                                    fit: BoxFit.cover,
-                                  ))),
-                    Container(
-                        margin: EdgeInsets.only(top: imageSize - 30),
-                        height:
-                            MediaQuery.of(context).size.height - imageSize + 30,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(50),
-                              blurRadius: 15,
-                            ),
-                          ],
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(
-                              top: 0, left: 30, right: 30, bottom: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Center(child: GrabIndicator()),
-                              Container(
-                                margin: const EdgeInsets.only(top: 20),
-                                padding: const EdgeInsets.only(
-                                    top: 8, bottom: 8, left: 20, right: 20),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withAlpha(50),
+                    Stack(
+                      children: [
+                        SizedBox(
+                            height: imageSize,
+                            width: double.infinity,
+                            child: Opacity(
+                                opacity: imageOpacity,
+                                child: (widget.clothe.image[0] == '/')
+                                    ? Image.memory(
+                                        base64Decode(widget.clothe.image),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        widget.clothe.image,
+                                        fit: BoxFit.cover,
+                                      ))),
+                        Container(
+                            margin: EdgeInsets.only(top: imageSize - 30),
+                            height: MediaQuery.of(context).size.height -
+                                imageSize +
+                                30,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withAlpha(50),
+                                  blurRadius: 15,
                                 ),
-                                child: Text(
-                                  '${widget.clothe.price} €',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                              ],
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.only(
+                                  top: 0, left: 30, right: 30, bottom: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Center(child: GrabIndicator()),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 8, left: 20, right: 20),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .primary),
-                                ),
+                                          .primary
+                                          .withAlpha(50),
+                                    ),
+                                    child: Text(
+                                      '${widget.clothe.price} €',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin: const EdgeInsets.only(top: 20),
+                                      child: Text(widget.clothe.title,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ))),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      'Taille: ${widget.clothe.size}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Marque: ${widget.clothe.brand}',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  Expanded(child: Container()),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 18, top: 18),
+                                          shadowColor: Colors.transparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          minimumSize:
+                                              const Size(double.infinity, 50)),
+                                      onPressed: (!isInBasket)
+                                          ? () => buy(widget.clothe)
+                                          : null,
+                                      child: Wrap(
+                                        runAlignment: WrapAlignment.center,
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        spacing: 10,
+                                        children: [
+                                          if (!isInBasket)
+                                            const Icon(Icons.add_shopping_cart),
+                                          Text(
+                                            isInBasket
+                                                ? 'Cet article est dans votre panier'
+                                                : 'Ajouter au panier',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          )
+                                        ],
+                                      ))
+                                ],
                               ),
-                              Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  child: Text(widget.clothe.title,
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ))),
-                              Container(
-                                margin: const EdgeInsets.only(top: 20),
-                                child: Text(
-                                  'Taille: ${widget.clothe.size}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              Text(
-                                'Marque: ${widget.clothe.brand}',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              Expanded(child: Container()),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 18, top: 18),
-                                      shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      minimumSize:
-                                          const Size(double.infinity, 50)),
-                                  onPressed: (!isInBasket)
-                                      ? () => buy(widget.clothe)
-                                      : null,
-                                  child: Wrap(
-                                    runAlignment: WrapAlignment.center,
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    spacing: 10,
-                                    children: [
-                                      if (!isInBasket)
-                                        const Icon(Icons.add_shopping_cart),
-                                      Text(
-                                        isInBasket
-                                            ? 'Cet article est dans votre panier'
-                                            : 'Ajouter au panier',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      )
-                                    ],
-                                  ))
-                            ],
-                          ),
-                        )),
-                    const Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: TopBar(''),
-                    ),
+                            )),
+                        const Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: TopBar(''),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            );
+                ));
           } else {
             return const Center(
               child: CircularProgressIndicator(),

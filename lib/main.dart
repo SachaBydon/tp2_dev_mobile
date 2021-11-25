@@ -11,16 +11,17 @@ import 'package:tp2_dev_mobile/screens/signin.dart';
 
 GetIt getIt = GetIt.instance;
 
-//TODO: Ajouter commentaires
 void main() async {
-  //Wait Firebase is fully initialized before starting the app
+  // Initialisation de firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  // Insitialisation du state de l'application
   getIt.registerSingleton<AppState>(AppState());
 
   runApp(const MyApp());
 
+  // Permet de définir les couleurs de la bar de status et de controles
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
@@ -38,6 +39,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // Méthode qui vérifie si les informations de connexion sont présentes dans le stockage
   Future<bool> aslogin() async {
     try {
       final prefs = await SharedPreferences.getInstance();

@@ -191,9 +191,11 @@ class _ProfilState extends State<Profil> {
   }
 
   logOut() async {
+    // Déconnecte l'utilisateur
     FirebaseAuth.instance.signOut();
     appState.logout();
 
+    // Supprime les données de l'utilisateur dans le stockage
     try {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('user_login');
@@ -202,6 +204,7 @@ class _ProfilState extends State<Profil> {
       print(e);
     }
 
+    // Redirige l'utilisateur vers la page de connexion
     Navigator.pushReplacementNamed(context, '/login');
   }
 
@@ -211,6 +214,7 @@ class _ProfilState extends State<Profil> {
     String userUID = appState.user?.uid ?? '';
     setState(() => isLoading = true);
 
+    // Met à jour les données simple de l'utilisateur
     await FirebaseFirestore.instance.collection('users').doc(userUID).update({
       'address': userData.address,
       'birth': userData.birth,
@@ -218,13 +222,13 @@ class _ProfilState extends State<Profil> {
       'postcode': userData.postcode,
     });
 
+    // Met à jour le mail de l'utilisateur si il a changé
     if (userData.email != userData.previousEmail) {
-      // Update email
       await appState.user?.updateEmail(userData.email);
     }
 
+    // Met à jour le mot de passe de l'utilisateur si il a changé
     if (userData.password != userData.previousPassword) {
-      // Update password
       await appState.user?.updatePassword(userData.password);
     }
 
@@ -235,6 +239,7 @@ class _ProfilState extends State<Profil> {
     String userUID = appState.user?.uid ?? '';
     String userEmail = appState.user?.email ?? '';
 
+    // Récupère les données de l'utilisateur
     DocumentSnapshot<Map<String, dynamic>> query =
         await FirebaseFirestore.instance.collection('users').doc(userUID).get();
 
@@ -266,16 +271,3 @@ formatDate(DateTime date) {
   String year = date.year.toString();
   return '$day/$month/$year';
 }
-
-//Firebase Auth class to handle user authentication
-// class Auth {
-//   final FirebaseAuth auth = FirebaseAuth.instance;
-
-//   Future<void> updateEmail(User user, String new_email) async {
-//     await user.updateEmail(new_email);
-//   }
-
-//   Future<void> updatePassword(User user, String new_password) async {
-//     await user.updatePassword(new_password);
-//   }
-// }

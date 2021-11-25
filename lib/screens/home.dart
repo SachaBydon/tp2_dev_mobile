@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
     String? userLogin;
     String? userPassword;
 
+    // Récupération des données de l'utilisateur
     try {
       final prefs = await SharedPreferences.getInstance();
       userLogin = prefs.getString('user_login');
@@ -81,8 +82,8 @@ class _HomeState extends State<Home> {
       print(e);
     }
 
+    // Connecte l'utilisateur si les données sont présentes
     if (userLogin == null || userPassword == null) return null;
-
     User user = await authHandler.handleSignInEmail(userLogin, userPassword);
     appState.login(user);
     appState.updateCartCount();

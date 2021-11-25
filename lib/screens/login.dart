@@ -14,39 +14,38 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  //Form state
+  // Données pour le formulaire
   final _formKey = GlobalKey<FormState>();
   final List<String?> textFieldsValue = [];
   String _loginValue = '';
   String _passwordValue = '';
   bool showPassword = false;
 
-  //Firebase authentication instance
   AuthActions authHandler = AuthActions();
 
   bool isLoading = false;
 
-  /// Method to check if the form is valid and if it is log the user in
   submitForm() async {
     FocusScope.of(context).unfocus();
 
+    // Vérifie que les champs sont remplis
     bool isValid = _formKey.currentState!.validate();
-
     if (!isValid) return;
 
     setState(() => isLoading = true);
 
+    // Connecte l'utilisateur
     try {
       User user =
           await authHandler.handleSignInEmail(_loginValue, _passwordValue);
 
-      //Authentication successful
+      //Authentication réussie
       AppState appState = GetIt.instance.get<AppState>();
       appState.login(user);
       authHandler.saveAuthData(_loginValue, _passwordValue);
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      //Authentication failed
+      //Authentication échouée
       String errorMessage = e.toString();
       if (errorMessage.split('] ').length > 1) {
         errorMessage = errorMessage.split('] ')[1];

@@ -16,7 +16,7 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  //Form state
+  // Données pour le formulaire
   final _formKey = GlobalKey<FormState>();
   final List<String?> textFieldsValue = [];
   String _loginValue = '';
@@ -25,7 +25,6 @@ class _SigninState extends State<Signin> {
   bool showPassword = false;
   bool showConfirm = false;
 
-  //Firebase authentication instance
   AuthActions authHandler = AuthActions();
 
   bool isLoading = false;
@@ -206,8 +205,9 @@ class _SigninState extends State<Signin> {
 
   submitForm() async {
     FocusScope.of(context).unfocus();
-    bool isValid = _formKey.currentState!.validate();
 
+    // Vérifie que les champs sont remplis
+    bool isValid = _formKey.currentState!.validate();
     if (!isValid) return;
 
     setState(() => isLoading = true);
@@ -219,6 +219,7 @@ class _SigninState extends State<Signin> {
       'postcode': '',
     };
 
+    // Création de l'utilisateur
     try {
       User user =
           await authHandler.handleSignUpEmail(_loginValue, _passwordValue);
@@ -231,12 +232,18 @@ class _SigninState extends State<Signin> {
           .doc(user.uid)
           .set({'items': []});
 
+      //Authentication réussie
+
       AppState appState = GetIt.instance.get<AppState>();
+
+      // Connecte l'utilisateur
       appState.login(user);
+      // Enregistre les données de l'utilisateur dans le stockage
       authHandler.saveAuthData(_loginValue, _passwordValue);
+      // Redirige l'utilisateur vers la page d'accueil
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      //Authentication failed
+      //Authentication échouée
       String errorMessage = e.toString();
       if (errorMessage.split('] ').length > 1) {
         errorMessage = errorMessage.split('] ')[1];

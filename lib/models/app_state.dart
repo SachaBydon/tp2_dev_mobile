@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
 
 class AppState {
+  // Variables pour compter le nombre d'items dans le panier
   final BehaviorSubject<int> _basketCounter = BehaviorSubject.seeded(0);
   get streamBasketCounter => _basketCounter.stream;
   get basketCounter => _basketCounter.value;
@@ -13,6 +14,7 @@ class AppState {
     _basketCounter.add(val);
   }
 
+  // Variables qui contient les informations du l'utilisateur connecté
   final BehaviorSubject<User?> _user = BehaviorSubject.seeded(null);
   get streamUser => _user.stream;
   User? get user => _user.value;
@@ -25,6 +27,7 @@ class AppState {
     _user.add(null);
   }
 
+  // Méthode pour récupérer le nombre d'items dans le panier dupuis la DB
   void updateCartCount() async {
     DocumentSnapshot<Map<String, dynamic>> basketQuery = await FirebaseFirestore
         .instance
@@ -35,6 +38,7 @@ class AppState {
     _basketCounter.add(basketQuery['items'].length);
   }
 
+  // Méthode pour savoir si un item est dans le panier
   Future<bool> checkIfInBasket(Clothe clothe) async {
     DocumentSnapshot<Map<String, dynamic>> basketQuery = await FirebaseFirestore
         .instance
@@ -50,6 +54,7 @@ class AppState {
     return false;
   }
 
+  // Variables pour les gérer la liste de tous les items dans chaque catégorie
   final BehaviorSubject<List<List<Clothe>>> _clothes = BehaviorSubject.seeded([
     [],
     [],
