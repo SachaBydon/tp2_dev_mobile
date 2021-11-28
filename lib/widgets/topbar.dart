@@ -14,6 +14,7 @@ class TopBar extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(left: 16),
               child: FloatingActionButton(
+                elevation: 4,
                 backgroundColor: Colors.white,
                 child: const Icon(Icons.arrow_back),
                 onPressed: () {

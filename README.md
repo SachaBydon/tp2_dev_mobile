@@ -6,7 +6,7 @@
 
 - #### #1
 
-  Au lancement de l'application l'interface de login est bien de deux champs et d'un bouton.  
+  Au lancement de l'application l'interface de login a bien deux champs et un bouton.  
   EN PLUS:
 
   - J'ai créé un widget Logo pour le nom à la place d'un headerBar.
@@ -29,7 +29,7 @@
 
 - #### #5:
 
-  Au clic sur le bouton de connection je verifie bien si l'utilisateur est en base si c'est le cas il est redirigé vers la page d'accueil. Sinon ou s'il y a une erreur un message est affiché dans une snackbar et l'application reste fonctionelle.
+  Au clic sur le bouton de connexion je verifie bien si l'utilisateur est en base si c'est le cas il est redirigé vers la page d'accueil. Sinon ou s'il y a une erreur un message est affiché dans une snackbar et l'application reste fonctionelle.
 
 - #### #6:
   Si les champs sont vides l'application reste fonctionelle et invite l'utilisateur à remplir les champs.
@@ -87,12 +87,13 @@
   À droite de chaque vetement, une poubelle (à la place de la croix) permet à l’utilisateur de retirer un
   produit. Au clic sur celle-ci, le produit est retiré de la liste et le total général mis à jour.
 
-- #### #4 (EN PLUS)
+- #### #4
+
+  Il n'y a pas d'autres boutons.
+
+- #### #5 (EN PLUS)
 
   Le nombre d'items dans le panier est afficher sur le bouton du panier.
-
-- #### #4
-  Il n'y a pas d'autres boutons.
 
 ### US#5 : Profil utilisateur
 
@@ -116,37 +117,37 @@
 
 ### US#6 : Filtrer sur la liste des vêtements
 
-#### 1#
+- #### 1#
 
-Sur la page d'accueil une TabBar est présente, listant les différentes catégories de vêtements.
+  Sur la page d'accueil une TabBar est présente, listant les différentes catégories de vêtements.
 
-#### 2#
+- #### 2#
 
-Par défaut, l’entrée "Tous" est sélectionnée et tous les vêtements sont affichés
+  Par défaut, l’entrée "Tous" est sélectionnée et tous les vêtements sont affichés
 
-#### 3#
+- #### 3#
 
-Au clic sur une des entrées, la liste est filtrée pour afficher seulement les vêtements correspondants à la catégorie sélectionnée.
+  Au clic sur une des entrées, la liste est filtrée pour afficher seulement les vêtements correspondants à la catégorie sélectionnée.
 
 ### US#7 : Laisser libre cours à votre imagination
 
-#### 1# Création de compte
+- #### 1# Création de compte
 
-Comme dit précédement J'ai ajouté une page de création de compte. Cette page est similaire à la page de login avec un champ "confirmer" pour le mot de passe en plus. Et le bouton Se connecter est remplacé par le bouton s'inscrire, qui va créer un utilisateur dans la base et rediriger vers la page d'accueil.
+  Comme dit précédement J'ai ajouté une page de création de compte. Cette page est similaire à la page de login avec un champ "confirmer" pour le mot de passe en plus. Et le bouton Se connecter est remplacé par le bouton s'inscrire, qui va créer un utilisateur dans la base et rediriger vers la page d'accueil.
 
-#### 2# Sauvegarde des informations de connexion
+- #### 2# Sauvegarde des informations de connexion
 
-Si on est connecté, lorsqu'on quitte et relance l'application on est automiquement reconecté avec les identifiants de la dernière connexion.
+  Si on est connecté, lorsqu'on quitte et relance l'application on est automiquement reconecté avec les identifiants de la dernière connexion.
 
-#### 3# Design
+- #### 3# Design
 
-Comme expliqué dans le récap des US précédentes. J'ai pris la liberté de changer certains éléments dans le but d'améliorer le design. Mais les fonctionalitées demandé sont toujours respectées.
+  Comme expliqué dans le récap des US précédentes. J'ai pris la liberté de changer certains éléments dans le but d'améliorer le design. Mais les fonctionalitées demandé sont toujours respectées.
 
-#### 4# Ajout de produit
+- #### 4# Ajout de produit
 
-Sur la page d'accueil il y a bouton flottant qui affiche la page d'ajout de produit. Cette page contient les champs textes pour les informations du produit (titre, marque, taille, prix, categorie, image).
-L'image récupéré depuis la gallerie de photo de l'appareil.
-Et il y a un bouton ajouté qui ajoute le produit en base, et qui redirige vers la page d'accueil.
+  Sur la page d'accueil il y a bouton flottant qui affiche la page d'ajout de produit. Cette page contient les champs textes pour les informations du produit (titre, marque, taille, prix, categorie, image).
+  L'image récupéré depuis la gallerie de photo de l'appareil.
+  Et il y a un bouton ajouté qui ajoute le produit en base, et qui redirige vers la page d'accueil.
 
 ---
 
@@ -173,6 +174,7 @@ Et il y a un bouton ajouté qui ajoute le produit en base, et qui redirige vers 
     - logo.dart
     - topbar.dart
   - main.dart
+    Code principal
   - utils.dart  
     Contient des fonctions utiles dans toute l'application.
 
@@ -245,3 +247,8 @@ service cloud.firestore {
 Il y a une règle pour chaque collection.  
 Pour la collection `clothes`, il faut être connecté pour lire et écrire.
 Pour la collection `users` et `paniers`, il faut être connecté et l'utilisateur peut récupérer et modifier uniquement ses propres données.
+
+## PS
+Pour se connecter à l'application vous pouvez créer un compte ou vous connecter avec les identifiants suivants:
+- Login: test@test.com
+- password: azerty

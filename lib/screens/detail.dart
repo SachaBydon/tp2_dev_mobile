@@ -100,7 +100,7 @@ class _DetailState extends State<Detail> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withAlpha(50),
+                                  color: Colors.black.withOpacity(0.1),
                                   blurRadius: 15,
                                 ),
                               ],
