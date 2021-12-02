@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
@@ -77,62 +78,87 @@ class _BasketState extends State<Basket> {
                 })));
   }
 
-  renderItem(clothe, userId) {
+  renderItem(Clothe clothe, userId) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey.shade100,
-      ),
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(8),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          children: [
-            Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Center(
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: (clothe.image[0] == '/')
-                            ? Image.memory(
-                                base64Decode(clothe.image),
-                                fit: BoxFit.cover,
-                                height: 50,
-                                width: 50,
-                              )
-                            : Image.network(
-                                clothe.image,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )))),
-            SizedBox(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(clothe.title, style: const TextStyle(fontSize: 20)),
-                Text('Taille: ${clothe.size}'),
-              ],
-            )),
-          ],
-        ),
-        SizedBox(
-            height: 50,
-            child: Row(
-              children: [
-                Text('${clothe.price}€',
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      delete(userId, clothe);
-                    })
-              ],
-            ))
-      ]),
-    );
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Dismissible(
+            direction: DismissDirection.endToStart,
+            background: Container(
+                alignment: Alignment.centerRight,
+                decoration: const BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                padding: const EdgeInsets.only(right: 16),
+                child: const Text(
+                  'Supprimer',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                )),
+            key: Key(clothe.id),
+            onDismissed: (direction) {
+              delete(userId, clothe, false);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Colors.grey.shade100,
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            child: Center(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: (clothe.image[0] == '/')
+                                        ? Image.memory(
+                                            base64Decode(clothe.image),
+                                            fit: BoxFit.cover,
+                                            height: 50,
+                                            width: 50,
+                                          )
+                                        : Image.network(
+                                            clothe.image,
+                                            height: 50,
+                                            width: 50,
+                                            fit: BoxFit.cover,
+                                          )))),
+                        SizedBox(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(clothe.title,
+                                style: const TextStyle(fontSize: 20)),
+                            Text('Taille: ${clothe.size}'),
+                          ],
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                        height: 50,
+                        child: Row(
+                          children: [
+                            Text('${clothe.price}€',
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  delete(userId, clothe, true);
+                                })
+                          ],
+                        ))
+                  ]),
+            )));
   }
 
   //Get clothes data from firebase
@@ -160,14 +186,14 @@ class _BasketState extends State<Basket> {
     return clothes;
   }
 
-  void delete(String userId, Clothe clothe) async {
+  void delete(String userId, Clothe clothe, bool reload) async {
     await FirebaseFirestore.instance.collection('paniers').doc(userId).update({
       'items': FieldValue.arrayRemove([clothe.id])
     });
 
     appState.updateCartCount();
     appState.reloadClothesList();
-    setState(() {});
+    if (reload) setState(() {});
   }
 
   num getTotalPrice(List<Clothe>? clothes) {

@@ -405,7 +405,8 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
                                               ),
                                             ),
                                             child: IconButton(
-                                                onPressed: () => {buy(item)},
+                                                onPressed: () =>
+                                                    {if (!inBasket) buy(item)},
                                                 color: Colors.white,
                                                 splashColor: Colors.white,
                                                 highlightColor: Colors.white,
@@ -435,9 +436,7 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
         'items': FieldValue.arrayUnion([clothe.id])
       });
       appState.updateCartCount();
-      setState(() {
-        // addedTobasket = true;
-      });
+      setState(() {});
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${clothe.title} ajouté au panier'),

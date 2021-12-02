@@ -95,6 +95,9 @@
 - #### #5 (EN PLUS)
 
   Le nombre d'items dans le panier est afficher sur le bouton du panier.
+- #### #6 (EN PLUS)
+
+  Il est possible de faire glisser un item vers la gauche pour le supprimer du panier.
 
 ### US#5 : Profil utilisateur
 
