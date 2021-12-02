@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:tp2_dev_mobile/widgets/logo.dart';
 import 'package:tp2_dev_mobile/models/app_state.dart';
@@ -281,9 +282,6 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
   }
 
   Widget page(List<Clothe> clothes) {
-    double itemWidth = (MediaQuery.of(context).size.width / 2) - 30;
-    double itemHeight = (MediaQuery.of(context).size.width / 2) - 30;
-
     return SingleChildScrollView(
         child: Padding(
       padding: const EdgeInsets.all(20),
@@ -293,25 +291,36 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
         runSpacing: 10,
         children: clothes
             .map((item) => Container(
-                width: (MediaQuery.of(context).size.width / 2) - 30,
-                margin: const EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black26, width: .5),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Center(
-                              child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
+                  // width: (MediaQuery.of(context).size.width / 2) - 30,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    // border: Border.all(color: Colors.black26, width: .5),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Stack(children: [
+                              ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
                                   child: SizedBox(
-                                      width: itemWidth,
-                                      height: itemHeight,
+                                      width: double.infinity,
+                                      // height: 160,
+                                      height:
+                                          (MediaQuery.of(context).size.width) -
+                                              130,
                                       child: (item.image[0] == '/')
                                           ? Image.memory(
                                               base64Decode(item.image),
@@ -320,61 +329,132 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
                                           : Image.network(
                                               item.image,
                                               fit: BoxFit.cover,
-                                            )))),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                              height: 50,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(item.title,
-                                      style: const TextStyle(fontSize: 20)),
-                                  Text('Taille: ${item.size}'),
-                                ],
-                              )),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text('${item.price}€',
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ]),
-                    Positioned.fill(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            AnimationController _animationController =
-                                BottomSheet.createAnimationController(this);
-                            showModalBottomSheet(
-                                transitionAnimationController:
-                                    _animationController,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (context) {
-                                  return Detail(
-                                      clothe: item,
-                                      controller: _animationController);
-                                });
-                          },
-                          customBorder: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )))
+                                            ))),
+                              Positioned.fill(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      AnimationController _animationController =
+                                          BottomSheet.createAnimationController(
+                                              this);
+                                      showModalBottomSheet(
+                                          transitionAnimationController:
+                                              _animationController,
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) {
+                                            return Detail(
+                                                clothe: item,
+                                                controller:
+                                                    _animationController);
+                                          });
+                                    },
+                                    customBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                    child: Column(
+                                  children: [
+                                    SizedBox(
+                                        width: double.infinity,
+                                        child: Text(item.title,
+                                            style:
+                                                const TextStyle(fontSize: 20))),
+                                    SizedBox(
+                                        width: double.infinity,
+                                        child: Text('Taille: ${item.size}')),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    SizedBox(
+                                        width: double.infinity,
+                                        child: Text('${item.price} €',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold))),
+                                  ],
+                                )),
+                                FutureBuilder(
+                                    future: appState.checkIfInBasket(item),
+                                    builder: (context,
+                                        AsyncSnapshot<bool?> snapshot) {
+                                      bool inBasket = snapshot.data ?? false;
+                                      if (snapshot.hasData) {
+                                        return Container(
+                                            decoration: BoxDecoration(
+                                              color: inBasket
+                                                  ? Colors.grey
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            child: IconButton(
+                                                onPressed: () => {buy(item)},
+                                                color: Colors.white,
+                                                splashColor: Colors.white,
+                                                highlightColor: Colors.white,
+                                                icon: const Icon(
+                                                    Icons.add_shopping_cart)));
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                              ],
+                            ),
+                          ])),
+                ))
             .toList(),
       ),
     ));
+  }
+
+  void buy(Clothe clothe) async {
+    var userUID = appState.user?.uid ?? '';
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('paniers')
+          .doc(userUID)
+          .update({
+        'items': FieldValue.arrayUnion([clothe.id])
+      });
+      appState.updateCartCount();
+      setState(() {
+        // addedTobasket = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${clothe.title} ajouté au panier'),
+          duration: const Duration(milliseconds: 1500),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.secondaryVariant,
+        ),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+          duration: const Duration(milliseconds: 1500),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

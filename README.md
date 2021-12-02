@@ -53,6 +53,7 @@
   EN PLUS:
 
   - Pour les images, j'ai ajouté l'affichage (les images sont stoqué en base soit en lien soit en base64)
+  - J'ai ajouté un bouton pour directement ajouter l'article au panier.
 
 - #### #5
 

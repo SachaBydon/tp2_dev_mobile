@@ -79,8 +79,12 @@ class _BasketState extends State<Basket> {
 
   renderItem(clothe, userId) {
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: Colors.grey.shade100,
+      ),
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.all(8),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(
           children: [
@@ -162,6 +166,7 @@ class _BasketState extends State<Basket> {
     });
 
     appState.updateCartCount();
+    appState.reloadClothesList();
     setState(() {});
   }
 
