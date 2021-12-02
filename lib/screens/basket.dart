@@ -37,7 +37,7 @@ class _BasketState extends State<Basket> {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
                             return Column(children: [
-                              GrabIndicator(),
+                              const GrabIndicator(),
                               const Center(
                                   child: Text('Panier',
                                       style: TextStyle(

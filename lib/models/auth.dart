@@ -24,12 +24,8 @@ class AuthActions {
 
   // Enregistre l'utilisateur dans le stockage
   saveAuthData(login, password) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('user_login', login);
-      prefs.setString('user_password', password);
-    } catch (e) {
-      print(e);
-    }
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('user_login', login);
+    prefs.setString('user_password', password);
   }
 }

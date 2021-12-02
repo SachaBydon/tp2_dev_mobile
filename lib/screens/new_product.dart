@@ -39,7 +39,7 @@ class FormProduct extends StatefulWidget {
 
 class _FormProductState extends State<FormProduct> {
   // Données pour le formulaire
-  Clothe _clothe = Clothe('', '', 0, '', '', '', 0);
+  final Clothe _clothe = Clothe('', '', 0, '', '', '', 0);
   int? _category = 0;
   final _formKey = GlobalKey<FormState>();
 
@@ -105,7 +105,6 @@ class _FormProductState extends State<FormProduct> {
                     return 'Veuillez entrer un nom';
                   }
                   setState(() {
-                    print(value);
                     _clothe.title = value ?? '';
                   });
                 },
@@ -117,7 +116,6 @@ class _FormProductState extends State<FormProduct> {
                     return 'Veuillez entrer une marque';
                   }
                   setState(() {
-                    print(value);
                     _clothe.brand = value ?? '';
                   });
                 },
@@ -129,7 +127,6 @@ class _FormProductState extends State<FormProduct> {
                     return 'Veuillez entrer une taille';
                   }
                   setState(() {
-                    print(value);
                     _clothe.size = value ?? '';
                   });
                 },
@@ -187,6 +184,7 @@ class _FormProductState extends State<FormProduct> {
   }
 }
 
+// ignore: must_be_immutable
 class CategoryGroupRadio extends StatefulWidget {
   Function(int? value) onChanged;
   CategoryGroupRadio({Key? key, required this.onChanged}) : super(key: key);
@@ -196,7 +194,7 @@ class CategoryGroupRadio extends StatefulWidget {
 }
 
 class _CategoryGroupRadioState extends State<CategoryGroupRadio> {
-  List<String> _categories = ['Aucune', 'Vêtement', 'Accessoire'];
+  final List<String> _categories = ['Aucune', 'Vêtement', 'Accessoire'];
   int _activeCategory = 0;
 
   @override
@@ -212,7 +210,7 @@ class _CategoryGroupRadioState extends State<CategoryGroupRadio> {
             int index = _categories.indexOf(category);
             bool isActive = index == _activeCategory;
             return Expanded(
-                child: Container(
+                child: SizedBox(
               child: ElevatedButton(
                 onPressed: () => changed(index),
                 child: Text(category,
@@ -242,6 +240,7 @@ class _CategoryGroupRadioState extends State<CategoryGroupRadio> {
   }
 }
 
+// ignore: must_be_immutable
 class ImagePickerButton extends StatefulWidget {
   Function(String value) onChanged;
   ImagePickerButton({Key? key, required this.onChanged}) : super(key: key);
@@ -251,6 +250,7 @@ class ImagePickerButton extends StatefulWidget {
 }
 
 class _ImagePickerButtonState extends State<ImagePickerButton> {
+  // ignore: prefer_typing_uninitialized_variables
   var _image;
 
   _getFromGallery() async {

@@ -79,9 +79,8 @@ class _HomeState extends State<Home> {
       final prefs = await SharedPreferences.getInstance();
       userLogin = prefs.getString('user_login');
       userPassword = prefs.getString('user_password');
-    } catch (e) {
-      print(e);
-    }
+      // ignore: empty_catches
+    } catch (e) {}
 
     // Connecte l'utilisateur si les données sont présentes
     if (userLogin == null || userPassword == null) return null;
@@ -93,6 +92,7 @@ class _HomeState extends State<Home> {
   }
 }
 
+// ignore: must_be_immutable
 class TopBar extends StatelessWidget {
   TopBar({Key? key}) : super(key: key);
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tp2_dev_mobile/models/auth.dart';
 import 'package:tp2_dev_mobile/widgets/logo.dart';
@@ -21,7 +20,7 @@ class _SigninState extends State<Signin> {
   final List<String?> textFieldsValue = [];
   String _loginValue = '';
   String _passwordValue = '';
-  String _confirmValue = '';
+
   bool showPassword = false;
   bool showConfirm = false;
 
@@ -122,9 +121,6 @@ class _SigninState extends State<Signin> {
                                     return 'Confirmer votre mot de passe';
                                   } else if (value != _passwordValue) {
                                     return 'Les mots de passe ne correspondent pas';
-                                  } else {
-                                    _confirmValue = value.toString();
-                                    return null;
                                   }
                                 },
                                 obscureText: !showConfirm,

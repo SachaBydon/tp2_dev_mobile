@@ -46,7 +46,6 @@ class _MyAppState extends State<MyApp> {
       String? userLogin = prefs.getString('user_login');
       return (userLogin != null);
     } catch (e) {
-      print(e);
       return false;
     }
   }

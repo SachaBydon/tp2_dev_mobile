@@ -73,14 +73,14 @@ class AppState {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance.collection('clothes').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Clothe clothe = Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
           doc['taille'], doc['marque'], doc['category']);
       newClothes[0].add(clothe);
       if (clothe.category == 1 || clothe.category == 2) {
         newClothes[clothe.category].add(clothe);
       }
-    });
+    }
     _clothes.add(newClothes);
   }
 }

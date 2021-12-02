@@ -17,6 +17,7 @@ class Clothe {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(other) {
     return other is Clothe && other.id == id;
   }

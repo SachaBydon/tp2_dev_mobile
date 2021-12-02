@@ -84,7 +84,7 @@ class _ProfilState extends State<Profil> {
                   decoration:
                       textFormFieldDecoration('Date de naissance', context),
                   onTap: () async {
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
                     DateTime? date = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
@@ -141,7 +141,7 @@ class _ProfilState extends State<Profil> {
                         ],
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xff26AE60),
+                        primary: const Color(0xff26AE60),
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -200,9 +200,8 @@ class _ProfilState extends State<Profil> {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('user_login');
       prefs.remove('user_password');
-    } catch (e) {
-      print(e);
-    }
+      // ignore: empty_catches
+    } catch (e) {}
 
     // Redirige l'utilisateur vers la page de connexion
     Navigator.pushReplacementNamed(context, '/login');
