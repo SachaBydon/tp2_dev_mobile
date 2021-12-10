@@ -53,7 +53,7 @@ class _FormProductState extends State<FormProduct> {
     if (_formKey.currentState!.validate()) {
       if (_clothe.images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Veuillez choisir une image !'),
+          content: Text('Veuillez choisir des images !'),
           duration: Duration(milliseconds: 2500),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.red,
@@ -307,7 +307,7 @@ class _ImagePickerButtonState extends State<ImagePickerButton> {
                         children: const [
                           Icon(Icons.photo_library),
                           SizedBox(width: 10),
-                          Text('Choisir une image',
+                          Text('Choisir des images',
                               style: TextStyle(fontSize: 16)),
                         ]))),
             _images.isNotEmpty ? ImageSquare(images: _images) : Container()
