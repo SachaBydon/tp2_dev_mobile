@@ -1,6 +1,3 @@
-// ignore: unused_import
-import 'dart:ffi';
-
 class Clothe {
   String id;
   String title;
