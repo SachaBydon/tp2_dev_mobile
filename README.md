@@ -72,6 +72,7 @@
   La page contient bien un bouton retour (avec une icon de flêche) qui permet de retourner à la page d'accueil. Et contient bien un bouton d'ajout au panier, qui ajoute l'article au panier.  
   EN PLUS:
   - Le bouton d'ajout au panier est désactivé si l'article est déjà dans le panier.
+  - Chaque articles peut posséder une ou plusieurs images. Il est donc possible de faire défiller les images sous forme de carousel. On peut aussi appuyer sur une image pour la voir en grand et on peut zoomer.
 
 ### US#4 : Le panier
 
@@ -149,9 +150,9 @@
 
 - #### 4# Ajout de produit
 
-  Sur la page d'accueil il y a bouton flottant qui affiche la page d'ajout de produit. Cette page contient les champs textes pour les informations du produit (titre, marque, taille, prix, categorie, image).
-  L'image récupéré depuis la gallerie de photo de l'appareil.
-  Et il y a un bouton ajouté qui ajoute le produit en base, et qui redirige vers la page d'accueil.
+  Sur la page d'accueil il y a bouton flottant qui affiche la page d'ajout de produit. Cette page contient les champs textes pour les informations du produit (titre, marque, taille, prix, categorie, images).
+  Les images récupéré depuis la gallerie de photo de l'appareil.
+  Et il y a un bouton ajouter qui ajoute le produit en base, et qui redirige vers la page d'accueil.
 
 ---
 
@@ -174,7 +175,9 @@
     - profil.dart (Page de profil)
     - new_product.dart (Page de création de produit)
   - /widgets
+    - carousel.dart
     - grab_indicator.dart
+    - image_square.dart
     - logo.dart
     - topbar.dart
   - main.dart
@@ -191,7 +194,8 @@ J'ai limité l'utilisation des bibliothèques, mais j'ai quand même décider d'
 - `shared_preferences`: Permet d'accéder au stockage de l'appareil. Je l'ai utilisé pour enregistrer les informations de connexion pour la reconnexion automatique.
 - `rxdart` et `get_it`: Permet de gérer un state global pour l'application (plus facile à utiliser que les providers de flutter).
 - `image_picker`: Permet de récupérer une image depuis la gallerie de photo de l'appareil. Je l'ai utilisé pour la page de création de produit.
-- `google_fonts`: Permet d'importer les polices google fonts. je l'ai utilisé pour le logo.
+- `flutter_carousel_slider`: Permet de créer un carousel avec des indicateur facilement.
+- ``: 
 
 ---
 
@@ -210,7 +214,7 @@ Pour l'authentification j'utilise la méthode de connexion "Adresse e-mail/Mot d
   Chaque item comprends les champs :
 
   - `category` : Number (0: Auncune, 1: Vêtement, 2: Accesoire),
-  - `image` : String (lien ou base64),
+  - `images` : Liste de String (lien ou base64),
   - `marque` : String,
   - `prix` : Number,
   - `taille` : String,
