@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+// ignore: must_be_immutable
 class ImageSquare extends StatefulWidget {
   List<String> images;
   ImageSquare({Key? key, required this.images}) : super(key: key);
@@ -12,7 +13,7 @@ class ImageSquare extends StatefulWidget {
 class _ImageSquareState extends State<ImageSquare> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: 100,
         height: 100,
         child: Column(children: [
@@ -29,7 +30,7 @@ class _ImageSquareState extends State<ImageSquare> {
 
   img(image) {
     if (image == null) {
-      return SizedBox(
+      return const SizedBox(
         width: 50,
         height: 50,
       );

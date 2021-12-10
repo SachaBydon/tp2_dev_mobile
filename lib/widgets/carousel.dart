@@ -3,6 +3,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'dart:convert';
 
+// ignore: must_be_immutable
 class Carousel extends StatefulWidget {
   List<String> items;
   double height;
@@ -60,7 +61,6 @@ class _CarouselState extends State<Carousel> {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
-                  print('tapped');
                   showModalBottomSheet(
                       backgroundColor: Colors.transparent,
                       context: context,

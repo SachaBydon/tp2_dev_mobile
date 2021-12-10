@@ -264,8 +264,6 @@ class _ImagePickerButtonState extends State<ImagePickerButton> {
         _images = [];
         for (XFile file in pickedFile) {
           _images.add(file.path);
-          print('pickedFile.path');
-          print(file.path);
         }
       });
     }
