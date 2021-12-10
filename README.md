@@ -1,5 +1,11 @@
 # TP2 dev mobile SACHA BYDON
 
+
+## Utilisation:
+Pour se connecter à l'application vous pouvez créer un compte ou vous connecter avec les identifiants suivants:
+- Login: test@test.com
+- Password: azerty
+
 ## Critères d’acceptance :
 
 ### US#1 : Interface de login
@@ -29,7 +35,7 @@
 
 - #### #5:
 
-  Au clic sur le bouton de connexion je verifie bien si l'utilisateur est en base si c'est le cas il est redirigé vers la page d'accueil. Sinon ou s'il y a une erreur un message est affiché dans une snackbar et l'application reste fonctionelle.
+  Au clic sur le bouton de connexion je verifie bien si l'utilisateur est en base. Si c'est le cas il est redirigé vers la page d'accueil. Sinon ou s'il y a une erreur un message est affiché dans une snackbar et l'application reste fonctionelle.
 
 - #### #6:
   Si les champs sont vides l'application reste fonctionelle et invite l'utilisateur à remplir les champs.
@@ -87,7 +93,9 @@
 - #### #3
 
   À droite de chaque vetement, une poubelle (à la place de la croix) permet à l’utilisateur de retirer un
-  produit. Au clic sur celle-ci, le produit est retiré de la liste et le total général mis à jour.
+  produit. Au clic sur celle-ci, le produit est retiré de la liste et le total général mis à jour.  
+  EN PLUS:  
+  Il est possible de faire glisser un item vers la gauche pour le supprimer du panier.
 
 - #### #4
 
@@ -95,10 +103,8 @@
 
 - #### #5 (EN PLUS)
 
-  Le nombre d'items dans le panier est afficher sur le bouton du panier.
-- #### #6 (EN PLUS)
+  Le nombre d'items dans le panier est affiché sur le bouton du panier.
 
-  Il est possible de faire glisser un item vers la gauche pour le supprimer du panier.
 
 ### US#5 : Profil utilisateur
 
@@ -180,7 +186,7 @@
     - image_square.dart
     - logo.dart
     - topbar.dart
-  - main.dart
+  - main.dart  
     Code principal
   - utils.dart  
     Contient des fonctions utiles dans toute l'application.
@@ -194,8 +200,8 @@ J'ai limité l'utilisation des bibliothèques, mais j'ai quand même décider d'
 - `shared_preferences`: Permet d'accéder au stockage de l'appareil. Je l'ai utilisé pour enregistrer les informations de connexion pour la reconnexion automatique.
 - `rxdart` et `get_it`: Permet de gérer un state global pour l'application (plus facile à utiliser que les providers de flutter).
 - `image_picker`: Permet de récupérer une image depuis la gallerie de photo de l'appareil. Je l'ai utilisé pour la page de création de produit.
-- `flutter_carousel_slider`: Permet de créer un carousel avec des indicateur facilement.
-- ``: 
+- `flutter_carousel_slider`: Permet de créer un carousel avec des indicateur facilement. Je l'ai utilisé pour la page détail.
+- `google_fonts`: Permet d'importer les polices d'écriture de google fonts. Je l'ai utilisé pour le logo.
 
 ---
 
@@ -255,8 +261,3 @@ service cloud.firestore {
 Il y a une règle pour chaque collection.  
 Pour la collection `clothes`, il faut être connecté pour lire et écrire.
 Pour la collection `users` et `paniers`, il faut être connecté et l'utilisateur peut récupérer et modifier uniquement ses propres données.
-
-## PS
-Pour se connecter à l'application vous pouvez créer un compte ou vous connecter avec les identifiants suivants:
-- Login: test@test.com
-- password: azerty

@@ -100,7 +100,7 @@ class _BasketState extends State<Basket> {
                 )),
             key: Key(clothe.id),
             onDismissed: (direction) {
-              delete(userId, clothe, false);
+              delete(userId, clothe);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -156,7 +156,7 @@ class _BasketState extends State<Basket> {
                             IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  delete(userId, clothe, true);
+                                  delete(userId, clothe);
                                 })
                           ],
                         ))
@@ -193,14 +193,14 @@ class _BasketState extends State<Basket> {
     return clothes;
   }
 
-  void delete(String userId, Clothe clothe, bool reload) async {
+  void delete(String userId, Clothe clothe) async {
     await FirebaseFirestore.instance.collection('paniers').doc(userId).update({
       'items': FieldValue.arrayRemove([clothe.id])
     });
 
     appState.updateCartCount();
     appState.reloadClothesList();
-    if (reload) setState(() {});
+    setState(() {});
   }
 
   num getTotalPrice(List<Clothe>? clothes) {

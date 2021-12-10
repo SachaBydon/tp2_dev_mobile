@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-// ignore: must_be_immutable
 class ImageSquare extends StatefulWidget {
-  List<String> images;
-  ImageSquare({Key? key, required this.images}) : super(key: key);
+  final List<String> images;
+  const ImageSquare({Key? key, required this.images}) : super(key: key);
 
   @override
   _ImageSquareState createState() => _ImageSquareState();

@@ -254,10 +254,9 @@ class _ImagePickerButtonState extends State<ImagePickerButton> {
   var _images = <String>[];
 
   _getFromGallery() async {
-    // Récupération de l'image
+    // Récupération des images
     List<XFile>? pickedFile = await ImagePicker().pickMultiImage();
 
-    // .pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _images = [];

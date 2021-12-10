@@ -3,12 +3,11 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'dart:convert';
 
-// ignore: must_be_immutable
 class Carousel extends StatefulWidget {
-  List<String> items;
-  double height;
+  final List<String> items;
+  final double height;
 
-  Carousel({Key? key, required this.items, required this.height})
+  const Carousel({Key? key, required this.items, required this.height})
       : super(key: key);
 
   @override
@@ -102,6 +101,6 @@ class _CarouselState extends State<Carousel> {
                     : Image.network(img['image'],
                         fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height))));
+                        height: widget.height))));
   }
 }

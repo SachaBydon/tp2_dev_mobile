@@ -1,7 +1,7 @@
 class Clothe {
   String id;
   String title;
-  double price;
+  num price;
   List<String> images;
   String size;
   String brand;

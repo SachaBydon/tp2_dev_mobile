@@ -75,29 +75,6 @@ class _DetailState extends State<Detail> {
                       children: [
                         Opacity(
                           opacity: imageOpacity,
-                          // child: CarouselSlider(
-                          //   options: CarouselOptions(
-                          //       height: imageSize,
-                          //       viewportFraction: 1.0,
-                          //       enableInfiniteScroll: false),
-                          //   items: widget.clothe.images
-                          //       .map(
-                          //         (item) => (RegExp(r'^base64.*')
-                          //                 .hasMatch(item))
-                          //             ? Image.memory(
-                          //                 base64Decode(
-                          //                     item.substring(6, item.length)),
-                          //                 fit: BoxFit.cover,
-                          //                 width: double.infinity,
-                          //               )
-                          //             : Image.network(
-                          //                 item,
-                          //                 fit: BoxFit.cover,
-                          //                 width: double.infinity,
-                          //               ),
-                          //       )
-                          //       .toList(),
-                          // )
                           child: Carousel(
                               height: imageSize, items: widget.clothe.images),
                         ),

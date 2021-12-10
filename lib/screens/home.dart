@@ -291,11 +291,9 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
         runSpacing: 10,
         children: clothes
             .map((item) => Container(
-                  // width: (MediaQuery.of(context).size.width / 2) - 30,
                   margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    // border: Border.all(color: Colors.black26, width: .5),
                     color: Colors.white,
                     boxShadow: const [
                       BoxShadow(
@@ -317,7 +315,6 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
                                   ),
                                   child: SizedBox(
                                       width: double.infinity,
-                                      // height: 160,
                                       height:
                                           (MediaQuery.of(context).size.width) -
                                               130,
