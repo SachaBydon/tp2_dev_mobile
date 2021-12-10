@@ -13,10 +13,4 @@ class Clothe {
   String toString() {
     return 'Clothe{title: $title, price: $price, size: $size, brand: $brand}';
   }
-
-  @override
-  // ignore: hash_and_equals
-  bool operator ==(other) {
-    return other is Clothe && other.id == id;
-  }
 }

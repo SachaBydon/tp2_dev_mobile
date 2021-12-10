@@ -200,8 +200,9 @@ class _ProfilState extends State<Profil> {
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('user_login');
       prefs.remove('user_password');
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      throw Exception('Erreur lors de la déconnexion');
+    }
 
     // Redirige l'utilisateur vers la page de connexion
     Navigator.pushReplacementNamed(context, '/login');

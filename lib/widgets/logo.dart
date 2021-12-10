@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class Logo extends StatelessWidget {
-  bool small;
-  Logo({Key? key, this.small = false}) : super(key: key);
+  final bool small;
+  const Logo({Key? key, this.small = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -185,10 +185,10 @@ class _FormProductState extends State<FormProduct> {
   }
 }
 
-// ignore: must_be_immutable
 class CategoryGroupRadio extends StatefulWidget {
-  Function(int? value) onChanged;
-  CategoryGroupRadio({Key? key, required this.onChanged}) : super(key: key);
+  final Function(int? value) onChanged;
+  const CategoryGroupRadio({Key? key, required this.onChanged})
+      : super(key: key);
 
   @override
   _CategoryGroupRadioState createState() => _CategoryGroupRadioState();
@@ -241,17 +241,16 @@ class _CategoryGroupRadioState extends State<CategoryGroupRadio> {
   }
 }
 
-// ignore: must_be_immutable
 class ImagePickerButton extends StatefulWidget {
-  Function(List<String> value) onChanged;
-  ImagePickerButton({Key? key, required this.onChanged}) : super(key: key);
+  final Function(List<String> value) onChanged;
+  const ImagePickerButton({Key? key, required this.onChanged})
+      : super(key: key);
 
   @override
   _ImagePickerButtonState createState() => _ImagePickerButtonState();
 }
 
 class _ImagePickerButtonState extends State<ImagePickerButton> {
-  // ignore: prefer_typing_uninitialized_variables
   var _images = <String>[];
 
   _getFromGallery() async {

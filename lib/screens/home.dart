@@ -79,8 +79,9 @@ class _HomeState extends State<Home> {
       final prefs = await SharedPreferences.getInstance();
       userLogin = prefs.getString('user_login');
       userPassword = prefs.getString('user_password');
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération des données');
+    }
 
     // Connecte l'utilisateur si les données sont présentes
     if (userLogin == null || userPassword == null) return null;
@@ -92,11 +93,10 @@ class _HomeState extends State<Home> {
   }
 }
 
-// ignore: must_be_immutable
 class TopBar extends StatelessWidget {
   TopBar({Key? key}) : super(key: key);
 
-  AppState appState = GetIt.instance.get<AppState>();
+  final AppState appState = GetIt.instance.get<AppState>();
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class TopBar extends StatelessWidget {
               size: 30,
             ),
           ),
-          Logo(small: true),
+          const Logo(small: true),
           BasketButton(),
         ],
       ),

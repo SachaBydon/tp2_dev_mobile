@@ -38,7 +38,7 @@ class _SigninState extends State<Signin> {
           children: [
             Column(children: [
               if (MediaQuery.of(context).size.height > 300)
-                Expanded(child: Logo()),
+                const Expanded(child: Logo()),
               Container(
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height -
