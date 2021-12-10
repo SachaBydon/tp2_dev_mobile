@@ -118,15 +118,18 @@ class _BasketState extends State<Basket> {
                             child: Center(
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: (clothe.image[0] == '/')
+                                    child: (RegExp(r'^base64.*')
+                                            .hasMatch(clothe.images[0]))
                                         ? Image.memory(
-                                            base64Decode(clothe.image),
+                                            base64Decode(clothe.images[0]
+                                                .substring(6,
+                                                    clothe.images[0].length)),
                                             fit: BoxFit.cover,
                                             height: 50,
                                             width: 50,
                                           )
                                         : Image.network(
-                                            clothe.image,
+                                            clothe.images[0],
                                             height: 50,
                                             width: 50,
                                             fit: BoxFit.cover,
@@ -180,7 +183,11 @@ class _BasketState extends State<Basket> {
 
     List<Clothe> clothes = [];
     for (var doc in itemsQuery.docs) {
-      clothes.add(Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
+      List<String> images = [];
+      for (var image in doc['images']) {
+        images.add(image);
+      }
+      clothes.add(Clothe(doc.id, doc['titre'], doc['prix'], images,
           doc['taille'], doc['marque'], doc['category']));
     }
     return clothes;

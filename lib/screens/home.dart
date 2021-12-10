@@ -321,13 +321,16 @@ class _ListItemsState extends State<ListItems> with TickerProviderStateMixin {
                                       height:
                                           (MediaQuery.of(context).size.width) -
                                               130,
-                                      child: (item.image[0] == '/')
+                                      child: (RegExp(r'^base64.*')
+                                              .hasMatch(item.images[0]))
                                           ? Image.memory(
-                                              base64Decode(item.image),
+                                              base64Decode(item.images[0]
+                                                  .substring(6,
+                                                      item.images[0].length)),
                                               fit: BoxFit.cover,
                                             )
                                           : Image.network(
-                                              item.image,
+                                              item.images[0],
                                               fit: BoxFit.cover,
                                             ))),
                               Positioned.fill(

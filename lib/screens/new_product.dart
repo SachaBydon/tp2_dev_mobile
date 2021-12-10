@@ -9,6 +9,7 @@ import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
 
 import 'package:tp2_dev_mobile/utils.dart';
+import 'package:tp2_dev_mobile/widgets/image_square.dart';
 import 'package:tp2_dev_mobile/widgets/topbar.dart';
 
 class NewProduct extends StatefulWidget {
@@ -39,7 +40,7 @@ class FormProduct extends StatefulWidget {
 
 class _FormProductState extends State<FormProduct> {
   // Données pour le formulaire
-  final Clothe _clothe = Clothe('', '', 0, '', '', '', 0);
+  final Clothe _clothe = Clothe('', '', 0, [], '', '', 0);
   int? _category = 0;
   final _formKey = GlobalKey<FormState>();
 
@@ -50,7 +51,7 @@ class _FormProductState extends State<FormProduct> {
 
     // Vérifie que les champs sont remplis
     if (_formKey.currentState!.validate()) {
-      if (_clothe.image == '') {
+      if (_clothe.images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Veuillez choisir une image !'),
           duration: Duration(milliseconds: 2500),
@@ -67,7 +68,7 @@ class _FormProductState extends State<FormProduct> {
         'taille': _clothe.size,
         'prix': _clothe.price,
         'marque': _clothe.brand,
-        'image': _clothe.image,
+        'images': _clothe.images,
         'category': _clothe.category,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -150,9 +151,9 @@ class _FormProductState extends State<FormProduct> {
                   _category = value;
                 });
               }),
-              ImagePickerButton(onChanged: (String value) {
+              ImagePickerButton(onChanged: (List<String> value) {
                 setState(() {
-                  _clothe.image = value;
+                  _clothe.images = value;
                 });
               }),
               ElevatedButton(
@@ -242,7 +243,7 @@ class _CategoryGroupRadioState extends State<CategoryGroupRadio> {
 
 // ignore: must_be_immutable
 class ImagePickerButton extends StatefulWidget {
-  Function(String value) onChanged;
+  Function(List<String> value) onChanged;
   ImagePickerButton({Key? key, required this.onChanged}) : super(key: key);
 
   @override
@@ -251,23 +252,32 @@ class ImagePickerButton extends StatefulWidget {
 
 class _ImagePickerButtonState extends State<ImagePickerButton> {
   // ignore: prefer_typing_uninitialized_variables
-  var _image;
+  var _images = <String>[];
 
   _getFromGallery() async {
     // Récupération de l'image
-    var pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    List<XFile>? pickedFile = await ImagePicker().pickMultiImage();
+
+    // .pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _images = [];
+        for (XFile file in pickedFile) {
+          _images.add(file.path);
+          print('pickedFile.path');
+          print(file.path);
+        }
       });
-
-      // Conversion de l'image en base64
-      List<int> imageBytes = await _image.readAsBytes();
-      String base64Image = base64Encode(imageBytes);
-      widget.onChanged(base64Image);
-    } else {
-      widget.onChanged('');
     }
+
+    List<String> imagesBase64 = <String>[];
+    for (var image in _images) {
+      // Conversion des images en base64
+      List<int> imageBytes = await File(image).readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+      imagesBase64.add('base64$base64Image');
+    }
+    widget.onChanged(imagesBase64);
   }
 
   @override
@@ -300,18 +310,7 @@ class _ImagePickerButtonState extends State<ImagePickerButton> {
                           Text('Choisir une image',
                               style: TextStyle(fontSize: 16)),
                         ]))),
-            _image != null
-                ? Container(
-                    color: Colors.red,
-                    height: 100,
-                    width: 100,
-                    child: Image.file(
-                      _image,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                    ),
-                  )
-                : Container()
+            _images.isNotEmpty ? ImageSquare(images: _images) : Container()
           ],
         ));
   }

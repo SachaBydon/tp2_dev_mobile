@@ -74,7 +74,11 @@ class AppState {
         await FirebaseFirestore.instance.collection('clothes').get();
 
     for (var doc in querySnapshot.docs) {
-      Clothe clothe = Clothe(doc.id, doc['titre'], doc['prix'], doc['image'],
+      List<String> images = [];
+      for (var image in doc['images']) {
+        images.add(image);
+      }
+      Clothe clothe = Clothe(doc.id, doc['titre'], doc['prix'], images,
           doc['taille'], doc['marque'], doc['category']);
       newClothes[0].add(clothe);
       if (clothe.category == 1 || clothe.category == 2) {

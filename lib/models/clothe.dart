@@ -1,19 +1,19 @@
+import 'dart:ffi';
+
 class Clothe {
   String id;
   String title;
   double price;
-  String image;
+  List<String> images;
   String size;
   String brand;
   int category;
-  Clothe(this.id, this.title, this.price, this.image, this.size, this.brand,
+  Clothe(this.id, this.title, this.price, this.images, this.size, this.brand,
       this.category);
 
   @override
   String toString() {
-    var formatedImage =
-        image.length > 10 ? image.substring(0, 10) + '...' : image;
-    return 'Clothe{title: $title, price: $price, image: $formatedImage, size: $size, brand: $brand}';
+    return 'Clothe{title: $title, price: $price, size: $size, brand: $brand}';
   }
 
   @override

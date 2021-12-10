@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
-import 'dart:convert';
 
 import 'package:tp2_dev_mobile/models/app_state.dart';
 import 'package:tp2_dev_mobile/models/clothe.dart';
+import 'package:tp2_dev_mobile/widgets/carousel.dart';
 import 'package:tp2_dev_mobile/widgets/grab_indicator.dart';
 
 import 'package:tp2_dev_mobile/widgets/topbar.dart';
@@ -73,20 +73,34 @@ class _DetailState extends State<Detail> {
                   children: [
                     Stack(
                       children: [
-                        SizedBox(
-                            height: imageSize,
-                            width: double.infinity,
-                            child: Opacity(
-                                opacity: imageOpacity,
-                                child: (widget.clothe.image[0] == '/')
-                                    ? Image.memory(
-                                        base64Decode(widget.clothe.image),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.network(
-                                        widget.clothe.image,
-                                        fit: BoxFit.cover,
-                                      ))),
+                        Opacity(
+                          opacity: imageOpacity,
+                          // child: CarouselSlider(
+                          //   options: CarouselOptions(
+                          //       height: imageSize,
+                          //       viewportFraction: 1.0,
+                          //       enableInfiniteScroll: false),
+                          //   items: widget.clothe.images
+                          //       .map(
+                          //         (item) => (RegExp(r'^base64.*')
+                          //                 .hasMatch(item))
+                          //             ? Image.memory(
+                          //                 base64Decode(
+                          //                     item.substring(6, item.length)),
+                          //                 fit: BoxFit.cover,
+                          //                 width: double.infinity,
+                          //               )
+                          //             : Image.network(
+                          //                 item,
+                          //                 fit: BoxFit.cover,
+                          //                 width: double.infinity,
+                          //               ),
+                          //       )
+                          //       .toList(),
+                          // )
+                          child: Carousel(
+                              height: imageSize, items: widget.clothe.images),
+                        ),
                         Container(
                             margin: EdgeInsets.only(top: imageSize - 30),
                             height: MediaQuery.of(context).size.height -
